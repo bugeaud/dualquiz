@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package service;
 
 import java.util.List;
@@ -26,7 +21,7 @@ import net.java.dualquizz.model.Player;
  * @author bugeaud at gmail dot com
  */
 @Stateless
-@Path("net.java.dualquizz.model.player")
+@Path("net.java.dualquizz.player")
 public class PlayerFacadeREST extends AbstractFacade<Player> {
     @PersistenceContext(unitName = "net.java.dualquizz_dualquiz_war_0.1-PU")
     private EntityManager em;
@@ -56,7 +51,7 @@ public class PlayerFacadeREST extends AbstractFacade<Player> {
     
     // check if a user with the same email exist
     private boolean isPlayerExisting(Player player){
-        return exists(getEntityManager().createNamedQuery(Player.KEY_PLAYER_COUNT_FROM_MAIL, Long.class), player.getMail());
+        return exists(getEntityManager().createNamedQuery(Player.KEY_PLAYER_SELECT_FROM_MAIL, Player.class), player.getMail());
     }
 
     /*@PUT

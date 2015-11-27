@@ -1,12 +1,18 @@
 package net.java.dualquizz.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -27,19 +33,24 @@ public class Player implements Serializable {
     public static final String KEY_PLAYER_COUNT_FROM_MAIL = "player.countFromMail";
     
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Integer id;
 
     private String mail;
     private String firstName;
     private String lastName;
+   
+   
+    @ElementCollection
+    private List<String> badges = new ArrayList<>();
     
-    public String getId() {
+    private int points = 0;
+    
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -109,5 +120,34 @@ public class Player implements Serializable {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    
+
+    /**
+     * @return the badges
+     */
+    public List<String> getBadges() {
+        return badges;
+    }
+
+    /**
+     * @param badges the badges to set
+     */
+    public void setBadges(List<String> badges) {
+        this.badges = badges;
+    }
+
+    /**
+     * @return the points
+     */
+    public int getPoints() {
+        return points;
+    }
+
+    /**
+     * @param points the points to set
+     */
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+
 }

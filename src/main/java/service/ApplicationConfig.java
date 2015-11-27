@@ -1,15 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package service;
 
 import java.util.Set;
 import javax.ws.rs.core.Application;
 
 /**
- * Application config context
+ * Application config context that lists allowed ressources
  * @licence http://www.gnu.org/licenses/agpl-3.0.html
  * @author bugeaud at gmail dot com
  */
@@ -31,6 +26,7 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(service.PlayerFacadeREST.class);
+        resources.add(service.QuestionFacadeREST.class);
     }
     
 }
