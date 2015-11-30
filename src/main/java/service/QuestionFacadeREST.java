@@ -1,6 +1,7 @@
 package service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -12,6 +13,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import net.java.dualquizz.model.Proposal;
 import net.java.dualquizz.model.Question;
 
 /**
@@ -106,6 +108,20 @@ public class QuestionFacadeREST extends AbstractFacade<Question> {
         return ((Long) q.getSingleResult()).intValue();
     }
 
+    public boolean isCorrecAnswer(String idQuestion, String idProposal){
+        final Question question = find(idQuestion);
+        if(question==null) return false;
+        
+        final List<Proposal> proposals = question.getProposals();
+        if (proposals==null || proposals.size()<1) return false;
+        // Filter all the proposal with only matching ones.
+        // If more that 0 exists, this is a correct answer
+        return (proposals.stream()
+                    .filter(p -> p.isCorrect() && p.getId().equals(idProposal) )
+                    .collect(Collectors.counting())) > 0;            
+    }    
+    
+    
     @Override
     protected EntityManager getEntityManager() {
         return em;
