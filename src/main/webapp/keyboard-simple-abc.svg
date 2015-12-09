@@ -5,23 +5,31 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.0"
-   id="keyb1"
+   id="magic-keyboard"
    height="100%"
    width="100%"
    viewBox="0 0 570 290"
    inkscape:version="0.91 r13725"
    sodipodi:docname="keyboard-simple-abc.svg">
   <defs>
-    
+    <text id="input" ></text>
     <style type="text/css"><![CDATA[
 	  svg{
 	   background-color :red;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+
 	  }
       .key rect {
-        fill: none;
+        fill: rgba(100,100,100,0.5);
         stroke: gold;
         stroke-width: 3;		
       }
@@ -32,7 +40,82 @@
 	  }
     ]]></style>
   </defs>
-
+  
+  <script type="text/ecmascript"><![CDATA[
+  "use strict";
+  
+	var hasClass = (typeof document.documentElement.classList == "undefined") ?
+    function(el, clss) {
+        return el.className && new RegExp("(^|\\s)" +
+               clss + "(\\s|$)").test(el.className);
+    } :
+    function(el, clss) {
+        return el.classList.contains(clss);
+    };
+  
+	function registerKeys(){
+	 console.log("Step 3");
+	 let keys = document.getElementsByClassName("key");
+	 Array.prototype.forEach.call(keys, function(element) {
+		//console.log(element);
+		element.addEventListener("touchend",keyKeyed, false);
+		//element.addEventListener("click",keyKeyed, false);
+	 });
+	 
+	}
+	
+        function getKeyTarget(element){
+            if (hasClass(element,"key")){
+                return element;
+            }else if(element.parentNode == document){
+                // Safeguard, should not be possible if key register was scoped correctly
+                return null;
+            }else{
+                return element.parentNode;
+            }
+        }
+      
+        function addIdentifierCharacter(c){
+            console.log("Char "+c);
+            let inputElement = document.getElementById("input");
+            inputElement.textContent = inputElement.textContent + c;
+            console.log(inputElement.textContent);
+            
+        }
+        function clearIdentifier(){
+            console.log("Clear");
+            let inputElement = document.getElementById("input");
+            inputElement.textContent = "";
+        }
+        function selectIdentifier(){
+            console.log("Select");
+        }
+      
+	function keyKeyed(event){
+	  let key = getKeyTarget(event.target).id;
+          switch(key){
+            case "clear" : {
+                clearIdentifier();
+            } break;
+            case "select" : {
+                selectIdentifier();
+            } break;
+            default :
+                addIdentifierCharacter(key);
+          }
+	  //	$(ev.target.parentElement.childNodes).removeClass("key-selected");
+	  //	$(ev.target).addClass("key-selected");
+	}
+ 
+ 
+	console.log("Step 1");
+	let root = document.getElementById("magic-keyboard");
+	root.addEventListener('load', registerKeys, false);
+	console.log("Step 2");
+ 
+  ]]></script>
+  
+  
   <g id="a" class="key letter" transform="translate(10,10)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
     <text x="25" y="25" text-anchor="end">A</text>
@@ -141,7 +224,7 @@
     <rect width="130" height="60" x="0" y="0" ry="10" />
     <text x="15" y="25" >Clear</text>
   </g>
-  <g id="v" class="key command" transform="translate(360,220)">
+  <g id="select" class="key command" transform="translate(360,220)">
     <rect width="130" height="60" x="0" y="0" ry="10" />
     <text x="15" y="25" >Select</text>
   </g>
