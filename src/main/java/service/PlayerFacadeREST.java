@@ -113,20 +113,40 @@ public class PlayerFacadeREST extends AbstractFacade<Player> {
     @Path("find/{filter}")
     @Produces({"application/xml", "application/json"})
     public List<Player> findUsers(@PathParam("filter") String filter) {
-        //return super.findRange(new int[]{from, to});
-        //javax.persistence.Query q = getEntityManager().createNativeQuery("db.Player.find( { $or: [ { \"mail\" : /.*"+filter+".*/ }, { \"firstName\" : /.*"+filter+".*/ }, { \"lastName\": /.*"+filter+".*/ } ] } )");
-        //javax.persistence.Query q = getEntityManager().createNativeQuery("db.Player.find( { $or: [ { \"mail\" : /.*"+filter+".*/ }, { \"firstName\" : /.*"+filter+".*/ }, { \"lastName\": /.*"+filter+".*/ } ] } )");
-        //javax.persistence.Query q = getEntityManager().createNativeQuery("db.Player.find( { $or: [ { mail : { $regex: \"*."+filter+"*.\", $options: \"si\" } }, { firstName : { $regex: \"*."+filter+"*.\", $options: \"si\" } }, { lastName: { $regex: \"*."+filter+"*.\", $options: \"si\" } } ] } )");
-        //db.Player.find( { $or: [ { mail : { $regex: "*.bug*.", $options: "si" } }, { firstName : { $regex: "*.bug*.", $options: "si" }/ }, { lastName: { $regex: "*.bug*.", $options: "si" } } ] } )
+        // Use MongoDB Native query with regexp json sequence
+        // This is required as text index ($text) is oddly not yet implementing partial word match
         javax.persistence.Query q = getEntityManager().createNativeQuery("db.Player.find( { \"$or\" : [ { \"mail\" : { \"$regex\": \".*"+filter+".*\", \"$options\": \"si\" } }, { \"firstName\" : { \"$regex\": \".*"+filter+".*\", \"$options\": \"si\" } }, { \"lastName\": { \"$regex\": \".*"+filter+".*\", \"$options\": \"si\" } } ] } )");
         final List items = q.getResultList();
         final List<Player> players = new ArrayList<>();
+        
+        // Perform some lazy MongoDB returned data to Java beans mapping so that it can produces the expected format
         for(Object obj : items){
-            players.add(Player.createPlayer(obj));
+            players.add(createPlayer((Object[])obj));
         }
         return players;
     }
 
+    
+    public static Player createPlayer(Object[] properties){
+        Player player = new Player();
+        if(properties==null){
+            return player;
+        }
+        if(properties.length>0){
+            player.setId(Integer.parseInt((String)properties[0]));
+        }
+        if(properties.length>1){
+            player.setMail((String)properties[1]);
+        }
+        if(properties.length>2){
+            player.setFirstName((String)properties[2]);
+        }
+        if(properties.length>3){
+            player.setLastName((String)properties[3]);
+        }
+        return player;
+    }
+    
     @GET
     @Path("count")
     @Produces("text/plain")
