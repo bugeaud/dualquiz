@@ -76,14 +76,14 @@
         }
       
         function addIdentifierCharacter(c){
-            console.log("Char "+c);
+            //console.log("Char "+c);
             let inputElement = document.getElementById("input");
             inputElement.textContent = inputElement.textContent + c;
-            console.log(inputElement.textContent);
+            //console.log(inputElement.textContent);
             
         }
         function clearIdentifier(){
-            console.log("Clear");
+            //console.log("Clear");
             let inputElement = document.getElementById("input");
             inputElement.textContent = "";
         }
