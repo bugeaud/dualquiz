@@ -7,6 +7,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.MapKeyColumn;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -26,12 +27,11 @@ public class Battle implements Serializable {
    
     private String category;
     
-    //@MapKeyColumn(name = "boardPlayer")
+    @MapKeyColumn(name = "playerId")
     //@Column(name= "boardScore")
     @ElementCollection
-    /// @todo using a ke
     //private Map<Player,Integer> board = new HashMap<>();
-    private Map<String,Integer> board = new HashMap<>();
+    private Map<Integer,Integer> boardMembers = new HashMap<>();
 
     public String getId() {
         return id;
@@ -83,15 +83,15 @@ public class Battle implements Serializable {
     /**
      * @return the board
      */
-    public Map<String,Integer> getBoard() {
-        return board;
+    public Map<Integer,Integer> getBoardMembers() {
+        return boardMembers;
     }
 
     /**
-     * @param board the board to set
+     * @param boardMembers the board members to set
      */
-    public void setBoard(Map<String,Integer> board) {
-        this.board = board;
+    public void setBoardMembers(Map<Integer,Integer> boardMembers) {
+        this.boardMembers = boardMembers;
     }
     
 }

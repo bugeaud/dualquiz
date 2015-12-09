@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
+<resources>
+  <mail-resource debug="false" enabled="true" from="bugeaud@gmail.com" host="localhost" jndi-name="mail/NotificationSession" object-type="user" store-protocol="imap" store-protocol-class="com.sun.mail.imap.IMAPStore" transport-protocol="smtp" transport-protocol-class="com.sun.mail.smtp.SMTPTransport" user="OSIADVLT\BUGEAUD">
+    <description/>
+    <property name="mail.smtp.port" value="1025"/>
+    <property name="mail.smtp.host" value="localhost"/>
+    <property name="mail.smtp.auth" value="true"/>
+    <property name="mail.smtp.starttls.enable" value="false"/>
+    <property name="mail.imap.host" value="localhost"/>
+    <property name="mail.imap.port" value="1443"/>
+  </mail-resource>
+</resources>

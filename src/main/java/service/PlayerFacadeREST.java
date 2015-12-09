@@ -1,6 +1,8 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -12,6 +14,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import net.java.dualquizz.model.Player;
 
@@ -46,6 +49,24 @@ public class PlayerFacadeREST extends AbstractFacade<Player> {
         // Create the entity
         super.create(player);
         // Indicate it is OK
+        return Response.ok(player).build();
+    }
+    
+    @EJB
+    NotificationService notificationService;
+    
+    @GET
+    @Path("{id}/notify")
+    @Produces({"application/xml", "application/json"})
+    public Response notifyPlayer(@PathParam("id") Integer id, @QueryParam("title") String title, @QueryParam("message") String message) {
+        final Player player = super.find(id);
+        if(player == null ){
+            // no player was found
+            /* @todo need*/
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        notificationService.notifyPlayer(player, title, message);
+        
         return Response.ok(player).build();
     }
     
@@ -86,6 +107,24 @@ public class PlayerFacadeREST extends AbstractFacade<Player> {
     @Produces({"application/xml", "application/json"})
     public List<Player> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
+    }
+    
+    @GET
+    @Path("find/{filter}")
+    @Produces({"application/xml", "application/json"})
+    public List<Player> findUsers(@PathParam("filter") String filter) {
+        //return super.findRange(new int[]{from, to});
+        //javax.persistence.Query q = getEntityManager().createNativeQuery("db.Player.find( { $or: [ { \"mail\" : /.*"+filter+".*/ }, { \"firstName\" : /.*"+filter+".*/ }, { \"lastName\": /.*"+filter+".*/ } ] } )");
+        //javax.persistence.Query q = getEntityManager().createNativeQuery("db.Player.find( { $or: [ { \"mail\" : /.*"+filter+".*/ }, { \"firstName\" : /.*"+filter+".*/ }, { \"lastName\": /.*"+filter+".*/ } ] } )");
+        //javax.persistence.Query q = getEntityManager().createNativeQuery("db.Player.find( { $or: [ { mail : { $regex: \"*."+filter+"*.\", $options: \"si\" } }, { firstName : { $regex: \"*."+filter+"*.\", $options: \"si\" } }, { lastName: { $regex: \"*."+filter+"*.\", $options: \"si\" } } ] } )");
+        //db.Player.find( { $or: [ { mail : { $regex: "*.bug*.", $options: "si" } }, { firstName : { $regex: "*.bug*.", $options: "si" }/ }, { lastName: { $regex: "*.bug*.", $options: "si" } } ] } )
+        javax.persistence.Query q = getEntityManager().createNativeQuery("db.Player.find( { \"$or\" : [ { \"mail\" : { \"$regex\": \".*"+filter+".*\", \"$options\": \"si\" } }, { \"firstName\" : { \"$regex\": \".*"+filter+".*\", \"$options\": \"si\" } }, { \"lastName\": { \"$regex\": \".*"+filter+".*\", \"$options\": \"si\" } } ] } )");
+        final List items = q.getResultList();
+        final List<Player> players = new ArrayList<>();
+        for(Object obj : items){
+            players.add(Player.createPlayer(obj));
+        }
+        return players;
     }
 
     @GET

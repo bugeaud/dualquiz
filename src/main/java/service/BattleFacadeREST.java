@@ -47,23 +47,23 @@ public class BattleFacadeREST extends AbstractFacade<Battle> {
     @GET
     @Path("new-battle")
     @Produces({"application/json", "application/xml"})
-    public Battle newBattle(@QueryParam("cid") List<String> playerIds) {
+    public Battle newBattle(@QueryParam("cid") List<Integer> playerIds) {
         if(playerIds==null || playerIds.size()<2){
             // There can only be a battle with at lease two supposed playser
             return null;
         }
-        final List<String> confirmedContenderIds = playerIds.stream()
+        final List<Integer> confirmedContenderIds = playerIds.stream()
                     .filter(p -> playerService.find(p)!=null )
                     .collect(Collectors.toList());  
         
         // Let's create an empty battle
         final Battle battle = new Battle();
         // Fill in the board according to the confirmed contenders
-        Map<String, Integer> map = confirmedContenderIds.stream()
+        Map<Integer, Integer> map = confirmedContenderIds.stream()
                                     .collect(Collectors.toMap(Function.identity(),
                                                               (p) -> 0));
                 
-        battle.setBoard(map);
+        battle.setBoardMembers(map);
         super.create(battle);
         return battle;
     }
@@ -118,7 +118,7 @@ public class BattleFacadeREST extends AbstractFacade<Battle> {
     @Produces({"application/xml", "application/json"})
     public Battle correctAnswer(@PathParam("id") String id,
                                 @PathParam("battleId") String battleId,
-                                @PathParam("playerId") String playerId,
+                                @PathParam("playerId") Integer playerId,
                                 @PathParam("questionId") String questionId,
                                 @PathParam("proposalId") String proposalId) {
         Battle battle = find(id);
@@ -131,7 +131,7 @@ public class BattleFacadeREST extends AbstractFacade<Battle> {
             return battle;
         }
         // check that the provided using is existing
-        final Map<String, Integer> board = battle.getBoard();
+        final Map<Integer, Integer> board = battle.getBoardMembers();
         if(!board.containsKey(playerId)){
             // nobody was found, we sillently ignore the mistake
             return battle;

@@ -22,7 +22,7 @@ public class Proposal implements Serializable {
     
     private String label;
     private boolean correct = false; 
-
+   
     public String getId() {
         return id;
     }

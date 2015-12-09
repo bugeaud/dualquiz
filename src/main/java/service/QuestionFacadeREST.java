@@ -13,6 +13,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import net.java.dualquizz.model.Proposal;
 import net.java.dualquizz.model.Question;
 
@@ -37,6 +38,39 @@ public class QuestionFacadeREST extends AbstractFacade<Question> {
     public void create(Question entity) {
         super.create(entity);
     }
+    
+    @GET
+    @Path("new-question/{category}")
+    @Produces({"application/json", "application/xml"})
+    public Question newQuestion(@PathParam("category") String category,
+                                @QueryParam("title") String title,
+                                @QueryParam("description") String description,
+                                @QueryParam("proposal") List<String> proposals,
+                                @QueryParam("correct") List<String> correctProposals
+                                ){
+        final Question question = new Question();
+        question.setTitle(title);
+        question.setDescription(description);
+        question.setCategory(category);
+        
+        final List<Proposal> proposalItems = proposals.stream()
+            //.filter(p -> playerService.find(p)!=null )
+            .map( label -> { 
+                Proposal p = new Proposal();
+                p.setLabel(label);
+                p.setCorrect(correctProposals.contains(label));
+                return p;
+            })
+            .collect(Collectors.toList());  
+        
+        question.setProposals(proposalItems);
+        
+        // Now create the new question;
+        super.create(question);
+        
+        return question;
+    }
+    
 
     @PUT
     @Path("{id}")
@@ -91,7 +125,7 @@ public class QuestionFacadeREST extends AbstractFacade<Question> {
         // Solution 2 KO : direct MongoDB query
         //   db.Question.find().limit(-1).skip(index).next()          
         List<Question> questions = findRange(index,index);
-        return questions.get(0);
+        return questions != null && questions.size()>0 ? questions.get(0) : null;
     }
     
     @GET

@@ -150,4 +150,23 @@ public class Player implements Serializable {
     }
 
 
+    public static Player createPlayer(Object... properties){
+        Player player = new Player();
+        if(properties==null){
+            return player;
+        }
+        if(properties.length>0){
+            player.setId(Integer.parseInt((String)properties[0]));
+        }
+        if(properties.length>1){
+            player.setMail((String)properties[1]);
+        }
+        if(properties.length>2){
+            player.setFirstName((String)properties[1]);
+        }
+        if(properties.length>3){
+            player.setLastName((String)properties[2]);
+        }
+        return player;
+    }
 }
