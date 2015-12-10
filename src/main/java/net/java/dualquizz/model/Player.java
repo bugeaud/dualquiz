@@ -1,19 +1,16 @@
 package net.java.dualquizz.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.hibernate.annotations.Generated;
-import org.hibernate.annotations.GenerationTime;
-import org.hibernate.annotations.GenericGenerator;
 
 /**
  * Represents a player of a DualQuizz game
@@ -41,8 +38,8 @@ public class Player implements Serializable {
     private String lastName;
    
    
-    @ElementCollection
-    private List<String> badges = new ArrayList<>();
+    @ElementCollection(fetch=FetchType.EAGER) 
+    private List<String> badges;
     
     private int points = 0;
     
@@ -76,7 +73,7 @@ public class Player implements Serializable {
 
     @Override
     public String toString() {
-        return "net.java.endless.empire.webempire.model.Player[ id=" + id + " ]";
+        return "net.java.dualquizz.model.Player[ id=" + id + " ]";
     }
 
     /**
