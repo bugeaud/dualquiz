@@ -18,6 +18,11 @@
   <defs>
     <text id="input" ></text>
     <style type="text/css"><![CDATA[
+		@keyframes glow-it {
+			0% { fill: hsla(0,0%,39%,0); }
+			100% { fill: hsla(0,0%,39%,0.5); }
+		}
+	
 	  svg{
 	   background-color :red;
             -webkit-touch-callout: none;
@@ -29,7 +34,7 @@
 
 	  }
       .key rect {
-        fill: rgba(100,100,100,0.5);
+        fill: hsla(0,0%,39%,0.5);
         stroke: gold;
         stroke-width: 3;		
       }
@@ -37,6 +42,11 @@
 	    font-family: arial;
 		stroke: gold;
 		fill: gold;
+	  }
+	  .last-selected rect{
+		animation-name: glow-it;
+		animation-duration: 200ms;
+		animation-timing-function: ease-out;
 	  }
     ]]></style>
   </defs>
@@ -83,30 +93,36 @@
             
         }
         function clearIdentifier(){
-            //console.log("Clear");
+            console.log("Back");
             let inputElement = document.getElementById("input");
             inputElement.textContent = "";
         }
-        function selectIdentifier(){
+        function backIdentifier(){
             console.log("Select");
+			let inputElement = document.getElementById("input");
+            inputElement.textContent = inputElement.textContent.slice(0,-1);
         }
       
 	function keyKeyed(event){
-	  let key = getKeyTarget(event.target).id;
-          switch(key){
+		let keyElement = getKeyTarget(event.target);
+		
+		// Simulate CSS class "blink" with "last-selected"
+		keyElement.classList.remove("last-selected");
+		setTimeout(function (){
+			keyElement.classList.add("last-selected");
+		},50);
+		
+        switch(keyElement.id){
             case "clear" : {
                 clearIdentifier();
             } break;
-            case "select" : {
-                selectIdentifier();
+            case "back" : {
+                backIdentifier();
             } break;
             default :
-                addIdentifierCharacter(key);
+                addIdentifierCharacter(keyElement.id);
           }
-	  //	$(ev.target.parentElement.childNodes).removeClass("key-selected");
-	  //	$(ev.target).addClass("key-selected");
 	}
- 
  
 	console.log("Step 1");
 	let root = document.getElementById("magic-keyboard");
@@ -220,13 +236,13 @@
     <rect width="60" height="60" x="0" y="0" ry="10" />
     <text x="25" y="25" text-anchor="end">Z</text>
   </g>
-  <g id="clear" class="key command" transform="translate(80,220)">
+  <g id="back" class="key command" transform="translate(80,220)">
+    <rect width="130" height="60" x="0" y="0" ry="10" />
+    <text x="15" y="25" >Back</text>
+  </g>
+  <g id="clear" class="key command" transform="translate(360,220)">
     <rect width="130" height="60" x="0" y="0" ry="10" />
     <text x="15" y="25" >Clear</text>
-  </g>
-  <g id="select" class="key command" transform="translate(360,220)">
-    <rect width="130" height="60" x="0" y="0" ry="10" />
-    <text x="15" y="25" >Select</text>
   </g>
   
 </svg>

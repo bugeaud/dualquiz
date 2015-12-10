@@ -5,14 +5,9 @@
       <meta charset="utf-8" />
        
       <style>
-         #svgelem {
-            position: relative;
-            left: 50%;
-            -webkit-transform: translateX(-20%);
-            -ms-transform: translateX(-20%);
-            transform: translateX(-20%);
-		 html{
-         }
+
+		 html, body, object{
+         
             -webkit-touch-callout: none;
             -webkit-user-select: none;
             -khtml-user-select: none;
@@ -28,37 +23,17 @@
    
 	<form id="form1">
 	 <input name="search" type="text" />
-	 
 	</form>
 	<form id="form2">
 	 <input name="search" type="text" />
-	 
 	</form>
 	
-	
-	<object id="keyboard1"  type="image/svg+xml" data="keyboard-simple-abc.svg" height="500" width="500">Your browser does not support SVG</object>
-	<object id="keyboard2"  type="image/svg+xml" data="keyboard-simple-abc.svg" height="500" width="500">Your browser does not support SVG</object>
+	<object id="keyboard1"  type="image/svg+xml" data="keyboard-simple-abc.svg" height="300" width="500">Your browser does not support SVG</object>
+	<object id="keyboard2"  type="image/svg+xml" data="keyboard-simple-abc.svg" height="300" width="500">Your browser does not support SVG</object>
 	
 <script defer async type="text/ecmascript">
 "use strict";
 	console.log("Step 0");
-	function updateInput1(){
-		let keyboardObject = document.getElementById("keyboard1");
-		let keyboardDocument = keyboardObject.getSVGDocument();
-		let keyboardInput = keyboardDocument.getElementById("input");
-		console.log("Input1 is :"+keyboardInput.textContent);
-
-		// retrigger the same call
-		setTimeout(updateInput1, 1000);
-	}
-	function updateInput2(){
-		let keyboardObject = document.getElementById("keyboard2");
-		let keyboardDocument = keyboardObject.getSVGDocument();
-		let keyboardInput = keyboardDocument.getElementById("input");
-		console.log("Input2 is :"+keyboardInput.textContent);
-		// retrigger the same call
-		setTimeout(updateInput2, 1000);
-	}
 	function startTimer1(){
 		console.log("Step C1");
 		//setTimeout(updateInput1, 1000);
