@@ -11,14 +11,31 @@
             -webkit-transform: translateX(-20%);
             -ms-transform: translateX(-20%);
             transform: translateX(-20%);
+		 html{
          }
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+		 }
+		 
       </style>  
 
    </head>
    <body>
    
-    <h2 align="center">HTML5 SVG Circle</h2>
-
+	<form id="form1">
+	 <input name="search" type="text" />
+	 
+	</form>
+	<form id="form2">
+	 <input name="search" type="text" />
+	 
+	</form>
+	
+	
 	<object id="keyboard1"  type="image/svg+xml" data="keyboard-simple-abc.svg" height="500" width="500">Your browser does not support SVG</object>
 	<object id="keyboard2"  type="image/svg+xml" data="keyboard-simple-abc.svg" height="500" width="500">Your browser does not support SVG</object>
 	
@@ -39,18 +56,49 @@
 		let keyboardDocument = keyboardObject.getSVGDocument();
 		let keyboardInput = keyboardDocument.getElementById("input");
 		console.log("Input2 is :"+keyboardInput.textContent);
-
 		// retrigger the same call
 		setTimeout(updateInput2, 1000);
 	}
 	function startTimer1(){
-		console.log("Step C");
-		setTimeout(updateInput1, 1000);
+		console.log("Step C1");
+		//setTimeout(updateInput1, 1000);
+		let keyboardObject = document.getElementById("keyboard1");
+		let keyboardDocument = keyboardObject.getSVGDocument();
+		let keyboardInput = keyboardDocument.getElementById("input");
+		//keyboardInput.addEventListener("change", changeSearch1, false);
+		new MutationObserver(changeSearch1).observe(keyboardInput, { 
+			attributes: true,
+			childList: true,
+			characterData: true
+		});
+		
 	}
 	function startTimer2(){
-		console.log("Step C");
-		setTimeout(updateInput2, 1000);
+		console.log("Step C2");
+		//setTimeout(updateInput2, 1000);
+		let keyboardObject = document.getElementById("keyboard2");
+		let keyboardDocument = keyboardObject.getSVGDocument();
+		let keyboardInput = keyboardDocument.getElementById("input");
+		//keyboardInput.addEventListener("change", changeSearch2, false);
+		new MutationObserver(changeSearch2).observe(keyboardInput, { 
+			attributes: true,
+			childList: true,
+			characterData: true
+		});
 	}
+	function changeSearch1(mutations, observer){
+		let newValue = mutations[0].target.textContent;
+		console.log("Change 1 : "+newValue);
+		let target = document.querySelectorAll("#form1 input[name='search']")[0];
+		target.value = newValue;
+	}
+	function changeSearch2(mutations, observer){
+		let newValue = mutations[0].target.textContent;
+		console.log("Change 2 : "+newValue);
+		let target = document.querySelectorAll("#form2 input[name='search']")[0];
+		target.value = newValue;
+	}
+	
  	console.log("Step A");
 	let root1 = document.getElementById("keyboard1");
 	root1.addEventListener('load', startTimer1, false);
