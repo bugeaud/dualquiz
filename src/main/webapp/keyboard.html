@@ -6,8 +6,7 @@
        
       <style>
 
-		 html, body, object{
-         
+		 html, body, object{     
             -webkit-touch-callout: none;
             -webkit-user-select: none;
             -khtml-user-select: none;
@@ -15,21 +14,48 @@
             -ms-user-select: none;
             user-select: none;
 		 }
+		
+		#play1 {
+			/* background-color : green; */
+			transform: rotate(90deg) translate(0%, 100%);
+			transform-origin: 100% 100%;
+			position:fixed;
+			top : 0;
+			left : 0;
+			width: 500px;
+			height : 500px;	
+		}
+		#play2 {
+			/*background-color : red;*/
+			transform: rotate(-90deg) translate(-100%, 0%);
+			transform-origin: 0% 0%;
+			position:fixed;
+			top : 0;
+			right : 0;
+			width: 500px;
+			height : 500px;	
+		}
+
 		 
       </style>  
 
    </head>
    <body>
    
+	<div id="play1">
+	
 	<form id="form1">
 	 <input name="search" type="text" />
 	</form>
+	<object id="keyboard1"  type="image/svg+xml" data="keyboard-simple-abc.svg" height="300" width="500">Your browser does not support SVG</object>
+	</div>
+	
+	<div id="play2">
 	<form id="form2">
 	 <input name="search" type="text" />
-	</form>
-	
-	<object id="keyboard1"  type="image/svg+xml" data="keyboard-simple-abc.svg" height="300" width="500">Your browser does not support SVG</object>
+	</form>	
 	<object id="keyboard2"  type="image/svg+xml" data="keyboard-simple-abc.svg" height="300" width="500">Your browser does not support SVG</object>
+	</div>
 	
 <script defer async type="text/ecmascript">
 "use strict";
