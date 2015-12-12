@@ -52,7 +52,7 @@ public class Question implements Serializable {
     
     /*@XmlElementWrapper
     @XmlElement(name="proposal") //, type=Proposal.class) */
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy="question", cascade = CascadeType.ALL, orphanRemoval = true)
     //@ElementCollection
     private List<Proposal> proposals = new ArrayList<>();
     

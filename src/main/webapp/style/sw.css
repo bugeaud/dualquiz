@@ -1,0 +1,188 @@
+
+@import url(https://fonts.googleapis.com/css?family=Play);
+@import url(https://fonts.googleapis.com/css?family=Orbitron);
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans:400,700);
+
+* { padding: 0; margin: 0; }
+
+
+body {
+ margin: 0;
+ background-color:black;
+ color: #ff6;
+ font-family: 'Play', sans-serif;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+.player-logo{
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 70px;
+  height: 70px;
+  padding: 10px 10px 10px 10px;
+  /*background-color: white;*/
+}
+
+.badges {
+    position: fixed;
+    bottom: 0;
+}
+.player-badges{
+  width: 60px;
+  padding: 5px 5px 5px 5px;
+  /*background-color: white;*/
+}
+
+.nobadge{
+    filter: grayscale(100%);
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+}
+
+
+
+.score{
+  position: fixed;
+  bottom: 80px;
+  right: 0;
+  /*background-color: white;*/
+  padding: 10px 10px 10px 10px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 200%;
+}
+.score::after{
+  position: fixed;
+  bottom: 70px;
+  right: 0;
+  /*background-color: white;*/
+  padding: 10px 10px 10px 10px;
+  content: "Points";
+  font-family: 'Orbitron', sans-serif;
+  font-size: 60%;
+}
+
+.timer{
+  position: fixed;
+  bottom: 140px;
+  right: 0;
+  /*background-color: white;*/
+  padding: 10px 10px 10px 10px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 200%;
+}
+.timer::after{
+  position: fixed;
+  bottom: 130px;
+  right: 0;
+  /*background-color: white;*/
+  padding: 10px 10px 10px 10px;
+  content: "Sec";
+  font-family: 'Orbitron', sans-serif;
+  font-size: 60%;
+}
+
+.player-name{
+  position: fixed;
+  bottom: 70px;
+  left: 0;
+  padding: 10px 10px 10px 10px;  font-family: 'Orbitron', sans-serif;
+  font-size: 150%;
+}
+
+#play1 {
+    /* background-color : green; */
+    transform: rotate(90deg) translate(20%, 100%);
+	transform-origin: 100% 100%;
+	position:fixed;
+	top : 0;
+	left : 0;
+    width: 500px;
+    height : 500px;	
+}
+#play2 {
+    /*background-color : red;*/
+    transform: rotate(-90deg) translate(-110%, 0%);
+	transform-origin: 0% 0%;
+	position:fixed;
+	top : 0;
+	right : 0;
+	width: 500px;
+    height : 500px;	
+}
+
+ .show-answer div.right-answer{
+  background: green;
+ }
+
+ .show-answer div:not(.right-answer){
+  background: red;
+ }
+
+ .show-answer div.right-answer.active {
+  background: lime;
+ }
+ 
+  .show-answer  div.active {
+  outline-style: solid;
+  outline-width:1px;
+  outline-color: yellow;
+  color: white;
+  }
+
+  .selectable .ui-selecting { background: #FECA40; }
+  .selectable .ui-selected { background: yellow; color: black; }
+  .active {
+    background: yellow;
+    color: black;
+}
+  .selectable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+  .selectable li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }
+  
+ .starscroll{
+  font-family: 'Droid+Sans', sans-serif;
+  transform: perspective(300px) rotateX(23deg);
+  text-align: justify;
+  overflow: hidden;
+ }
+ 
+ .starscroll header {
+  font-size: 300%;
+ }
+ 
+ .starscroll > ol {
+  width:100%;
+ }
+ .starscroll > li {
+  font-size: 100%;
+  text-align: justify;
+  width:100%;
+  padding-left : 50px ! important; 
+ }
+ 
+ .starscroll > li:content {
+  text-align: justify;
+ }
+ 
+ 
+ .starscroll:after {
+	position: absolute;
+	content: ' ';
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 60%;
+	background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.5) 0%, transparent 100%);
+	background-image: -moz-linear-gradient(top, rgba(0,0,0,1) 0%, transparent 100%);
+	background-image: -ms-linear-gradient(top, rgba(0,0,0,1) 0%, transparent 100%);
+	background-image: -o-linear-gradient(top, rgba(0,0,0,1) 0%, transparent 100%);
+	background-image: linear-gradient(top, rgba(0,0,0,1) 0%, transparent 100%);
+	pointer-events: none;
+}

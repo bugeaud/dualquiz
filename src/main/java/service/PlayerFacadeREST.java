@@ -90,10 +90,8 @@ public class PlayerFacadeREST extends AbstractFacade<Player> {
     @GET
     @Path("{id}")
     @Produces({"application/xml", "application/json"})
-    public Player find(@PathParam("id") String id) {
-        //return super.find(id);
-        Player p= getEntityManager().find(Player.class, id);
-        return p;
+    public Player find(@PathParam("id") Integer id) {
+        return super.find(id);
     }
 
     @GET

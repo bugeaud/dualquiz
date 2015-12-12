@@ -70,7 +70,7 @@ public class BattleFacadeREST extends AbstractFacade<Battle> {
                                     .collect(Collectors.toMap(Function.identity(),
                                                               (p) -> 0));
                 
-        battle.setBoardMembers(map);
+        battle.setBoardMembers(map);        
         super.create(battle);
         return battle;
     }

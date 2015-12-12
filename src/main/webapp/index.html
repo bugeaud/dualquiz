@@ -1,11 +1,23 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Start Page</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel='stylesheet' href='webjars/bootstrap/3.1.0/css/bootstrap.min.css'>
-    </head>
-    <body>
-        <h1>Hello World!</h1>
-    </body>
+<head>
+ <title>Start Quizz</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- JS (load angular, ui-router, and our custom js file) -->
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="http://code.angularjs.org/1.2.13/angular.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js"></script>
+        <script src="./js/app.js"></script>
+        <script src="./js/xml2json.min.js"></script>
+         <link href="./style/sw.css" rel="stylesheet">
+         
+</head>
+<!-- apply our angular app to our site -->
+<body ng-app="quizzApp">
+
+    <div class="container">
+        <div ui-view></div>
+    </div>
+
+</body>
 </html>
