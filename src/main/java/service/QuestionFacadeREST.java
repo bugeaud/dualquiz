@@ -9,7 +9,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -18,7 +17,12 @@ import net.java.dualquizz.model.Proposal;
 import net.java.dualquizz.model.Question;
 
 /**
- * Question REST Service
+ * Question REST Service that provides sets of functionalities such as
+ *  - Create Question (POST or GET)
+ *  - Count Questions
+ *  - Select a random question
+ *  - Select a random question for a given category
+ *  - Check if a answer is a correct answer of a given question (EJB call only)
  * @licence http://www.gnu.org/licenses/agpl-3.0.html
  * @author bugeaud at gmail dot com
  */
@@ -71,13 +75,15 @@ public class QuestionFacadeREST extends AbstractFacade<Question> {
         return question;
     }
     
-
+/*
+    // Temporary disabled
     @PUT
     @Path("{id}")
     @Consumes({"application/xml", "application/json"})
     public void edit(@PathParam("id") String id, Question entity) {
         super.edit(entity);
     }
+*/
 
     @DELETE
     @Path("{id}")
@@ -87,21 +93,21 @@ public class QuestionFacadeREST extends AbstractFacade<Question> {
 
     @GET
     @Path("{id}")
-    @Produces({"application/xml", "application/json"})
+    @Produces({"application/json", "application/xml" })
     public Question find(@PathParam("id") String id) {
         return super.find(id);
     }
 
     @GET
     @Override
-    @Produces({"application/xml", "application/json"})
+    @Produces({"application/json", "application/xml" })
     public List<Question> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
-    @Produces({"application/xml", "application/json"})
+    @Produces({"application/json", "application/xml" })
     public List<Question> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
@@ -115,7 +121,7 @@ public class QuestionFacadeREST extends AbstractFacade<Question> {
 
     @GET
     @Path("random")
-    @Produces({"application/xml", "application/json"})
+    @Produces({"application/json", "application/xml" })
     public Question randomAll() {
         int index = (int)(Math.random()*super.count());
         // @todo This is not efficient but due to various issue in OGM this one 
@@ -130,7 +136,7 @@ public class QuestionFacadeREST extends AbstractFacade<Question> {
     
     @GET
     @Path("random/{category: [a-zA-Z0-9]+}")
-    @Produces({"application/xml", "application/json"})                                  
+    @Produces({"application/json", "application/xml" })
     public Question random(@PathParam("category") String category) {
         int index = (int)(Math.random()*countQuestionByCategory(category)); 
         final List<Question> questions = findRange(new int[]{index,index}, Question.KEY_QUESTION_SELECT_FROM_CATEGORY, category);
@@ -142,7 +148,7 @@ public class QuestionFacadeREST extends AbstractFacade<Question> {
         return ((Long) q.getSingleResult()).intValue();
     }
 
-    public boolean isCorrecAnswer(String idQuestion, String idProposal){
+    public boolean isCorrectAnswer(String idQuestion, String idProposal){
         final Question question = find(idQuestion);
         if(question==null) return false;
         
@@ -151,7 +157,7 @@ public class QuestionFacadeREST extends AbstractFacade<Question> {
         // Filter all the proposal with only matching ones.
         // If more that 0 exists, this is a correct answer
         return (proposals.stream()
-                    .filter(p -> p.isCorrect() && p.getId().equals(idProposal) )
+                    .filter(p -> p.isCorrect() && p.getId().equals(idProposal))
                     .collect(Collectors.counting())) > 0;            
     }    
     

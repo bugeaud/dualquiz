@@ -5,7 +5,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
-import org.hibernate.ogm.datastore.keyvalue.options.navigation.KeyValueStorePropertyContext;
 
 /**
  * Facade to generate REST services
