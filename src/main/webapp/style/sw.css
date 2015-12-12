@@ -1,3 +1,4 @@
+
 @import url(https://fonts.googleapis.com/css?family=Play);
 @import url(https://fonts.googleapis.com/css?family=Orbitron);
 @import url(http://fonts.googleapis.com/css?family=Droid+Sans:400,700);
@@ -20,10 +21,6 @@ body {
 
 }
 
-#play1, #play2{
-
-}
-
 .player-logo{
   position: fixed;
   bottom: 0;
@@ -32,8 +29,26 @@ body {
   height: 70px;
   padding: 10px 10px 10px 10px;
   /*background-color: white;*/
-
 }
+
+.badges {
+    position: fixed;
+    bottom: 0;
+}
+.player-badges{
+  width: 60px;
+  padding: 5px 5px 5px 5px;
+  /*background-color: white;*/
+}
+
+.nobadge{
+    filter: grayscale(100%);
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+}
+
+
+
 .score{
   position: fixed;
   bottom: 80px;
@@ -76,13 +91,13 @@ body {
 
 .player-name{
   position: fixed;
-  bottom: 0;
+  bottom: 70px;
   left: 0;
   padding: 10px 10px 10px 10px;  font-family: 'Orbitron', sans-serif;
   font-size: 150%;
 }
 
-.play1 {
+#play1 {
     /* background-color : green; */
     transform: rotate(90deg) translate(20%, 100%);
 	transform-origin: 100% 100%;
@@ -92,7 +107,7 @@ body {
     width: 500px;
     height : 500px;	
 }
-.play2 {
+#play2 {
     /*background-color : red;*/
     transform: rotate(-90deg) translate(-110%, 0%);
 	transform-origin: 0% 0%;
@@ -103,19 +118,19 @@ body {
     height : 500px;	
 }
 
- .show-answer .selectable li.right-answer{
+ .show-answer div.right-answer{
   background: green;
  }
 
- .show-answer .selectable li:not(.right-answer){
+ .show-answer div:not(.right-answer){
   background: red;
  }
 
- .show-answer .selectable li.right-answer.ui-selected {
+ .show-answer div.right-answer.active {
   background: lime;
  }
  
-  .show-answer .selectable li.ui-selected {
+  .show-answer  div.active {
   outline-style: solid;
   outline-width:1px;
   outline-color: yellow;
@@ -124,6 +139,10 @@ body {
 
   .selectable .ui-selecting { background: #FECA40; }
   .selectable .ui-selected { background: yellow; color: black; }
+  .active {
+    background: yellow;
+    color: black;
+}
   .selectable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
   .selectable li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }
   
@@ -167,6 +186,3 @@ body {
 	background-image: linear-gradient(top, rgba(0,0,0,1) 0%, transparent 100%);
 	pointer-events: none;
 }
-
- 
-  

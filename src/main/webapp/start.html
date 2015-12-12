@@ -1,55 +1,36 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <title>Start Quizz</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- JS (load angular, ui-router, and our custom js file) -->
-        <script src="http://code.angularjs.org/1.2.13/angular.js"></script>
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js"></script>
-        <script src="http://code.jquery.com/jquery.min.js"></script>
-         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-touch/1.4.8/angular-touch.js"></script>
-        <script src="./js/app.js"></script>
-        <style>
-
-            html, body, object{
-
-                -webkit-touch-callout: none;
-                -webkit-user-select: none;
-                -khtml-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
-            }
-
-        </style>  
-    </head>
-    <!-- apply our angular app to our site -->
-    <body ng-app="quizzApp">
-
         <div ng-controller="searchController">
-
             <form>
-                 <input type="text" name="player2" ng-model="players.user1" />
-                <input name="search" type="text"  ng-model="search1" />
+            <div ng-show="confirmed1==false">
+                
+                <input name="search" type="text" ng-min-length="3" ng-model="search1" />
+                <button ng-click="confirm(1)" ng-show="checked1">Commencer</button>
+               
                 <ul>
-                    <li ng-repeat="list in templateList | filter:search1 " ng-click="setValue1(list)">{{list.name}}</li>
+                    <li ng-repeat="list in templateList | filter:search1 " ng-click="setValue1(list)">{{list.firstName}} {{list.lastName}}</li>
                 </ul>
-
-           
-                <input type="text" name="player2" ng-model="players.user2" />
-                <input name="search" type="text"  ng-model="search2" />
-                <ul>
-                    <li ng-repeat="list in templateList | filter:search2 " ng-click="setValue2(list)">{{list.name}}</li>
-                </ul>
-
+            </div>
+             <div ng-show="confirmed1==true">
+               
+                 <img src="img/Lightsaber-blue.png" alt=""/>
+             </div>
             </form>
+              <form>
+            <div ng-show="confirmed2==false">
+                
+                <input name="search" type="text" ng-min-length="3" ng-model="search2" />
+                <button ng-click="confirm(2)" ng-show="checked2">Commencer</button>
+               
+                <ul>
+                    <li ng-repeat="list in templateList | filter:search2 " ng-click="setValue2(list)">{{list.firstName}} {{list.lastName}}</li>
+                </ul>
+            </div>
+             <div ng-show="confirmed2==true">
+               
+                 <img src="img/Lightsaber-red.png" alt=""/>
+             </div>
+            </form>
+         
+
+            
         </div>
 
-    </body>
-</html>

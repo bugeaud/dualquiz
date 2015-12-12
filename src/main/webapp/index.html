@@ -4,23 +4,20 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- JS (load angular, ui-router, and our custom js file) -->
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
         <script src="http://code.angularjs.org/1.2.13/angular.js"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js"></script>
-        <script src="http://code.jquery.com/jquery.min.js"></script>
-         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-touch/1.4.8/angular-touch.js"></script>
-         <script src="./js/angular-timer-all.min.js"></script>
         <script src="./js/app.js"></script>
-        
-         <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-         <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+        <script src="./js/xml2json.min.js"></script>
+         <link href="./style/sw.css" rel="stylesheet">
+         
 </head>
 <!-- apply our angular app to our site -->
 <body ng-app="quizzApp">
+
     <div class="container">
         <div ui-view></div>
     </div>
-
-
 
 </body>
 </html>

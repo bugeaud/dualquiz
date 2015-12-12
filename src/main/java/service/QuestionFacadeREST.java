@@ -115,7 +115,7 @@ public class QuestionFacadeREST extends AbstractFacade<Question> {
 
     @GET
     @Path("random")
-    @Produces({"application/xml", "application/json"})
+    @Produces({"application/json"})
     public Question randomAll() {
         int index = (int)(Math.random()*super.count());
         // @todo This is not efficient but due to various issue in OGM this one 

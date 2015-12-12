@@ -1,13 +1,10 @@
 
-	 <article id="question-p2" class="question">
-	  <header>{{description}}</header>
-	  <ol class="selectable">
-	    <li class="ui-widget-content">Red</li>
-		<li class="ui-widget-content">Blue</li>
-	    <li class="ui-widget-content right-answer">Yellow</li>
-		<li class="ui-widget-content">Black (Dark suits him)</li>
-	    <li class="ui-widget-content">#FFFFFF00 (He is a geek !)</li>	
-	  </ol>
-	 </article>
+<article class="question" ng-class="{'show-answer': showAnswer}">
+    <header>{{nbQuestion}}. {{description}}</header>
+    <div ng-init="selection = { selectedNode:  null }">
+        <div ng-repeat="proposal in proposals" class="selectable" ng-class="{active: selection.selectedNode == proposal, 'right-answer':proposal.correct }"
+             ng-click="selection.selectedNode = proposal; clickedOrTouched($event, proposal.correct)"
+             >{{proposal.label}}</div>
+    </div>
+</article>
 
-	

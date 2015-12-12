@@ -1,273 +1,44 @@
-<script src="http://code.jquery.com/jquery.min.js"></script>
-<!-- <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">-->
-<style>
-@import url(https://fonts.googleapis.com/css?family=Play);
-@import url(https://fonts.googleapis.com/css?family=Orbitron);
-@import url(http://fonts.googleapis.com/css?family=Droid+Sans:400,700);
-
-* { padding: 0; margin: 0; }
-
-
-body {
- margin: 0;
- background-color:black;
- color: #ff6;
- font-family: 'Play', sans-serif;
-
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-
-}
-
-#play1, #play2{
-
-}
-
-.player-logo{
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  width: 70px;
-  height: 70px;
-  padding: 10px 10px 10px 10px;
-  /*background-color: white;*/
-
-}
-.score{
-  position: fixed;
-  bottom: 80px;
-  right: 0;
-  /*background-color: white;*/
-  padding: 10px 10px 10px 10px;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 200%;
-}
-.score::after{
-  position: fixed;
-  bottom: 70px;
-  right: 0;
-  /*background-color: white;*/
-  padding: 10px 10px 10px 10px;
-  content: "Points";
-  font-family: 'Orbitron', sans-serif;
-  font-size: 60%;
-}
-
-.timer{
-  position: fixed;
-  bottom: 140px;
-  right: 0;
-  /*background-color: white;*/
-  padding: 10px 10px 10px 10px;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 200%;
-}
-.timer::after{
-  position: fixed;
-  bottom: 130px;
-  right: 0;
-  /*background-color: white;*/
-  padding: 10px 10px 10px 10px;
-  content: "Sec";
-  font-family: 'Orbitron', sans-serif;
-  font-size: 60%;
-}
-
-.player-name{
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  padding: 10px 10px 10px 10px;  font-family: 'Orbitron', sans-serif;
-  font-size: 150%;
-}
-
-#play1 {
-    /* background-color : green; */
-    transform: rotate(90deg) translate(20%, 100%);
-	transform-origin: 100% 100%;
-	position:fixed;
-	top : 0;
-	left : 0;
-    width: 500px;
-    height : 500px;	
-}
-#play2 {
-    /*background-color : red;*/
-    transform: rotate(-90deg) translate(-110%, 0%);
-	transform-origin: 0% 0%;
-	position:fixed;
-	top : 0;
-	right : 0;
-	width: 500px;
-    height : 500px;	
-}
-
- .show-answer .selectable li.right-answer{
-  background: green;
- }
-
- .show-answer .selectable li:not(.right-answer){
-  background: red;
- }
-
- .show-answer .selectable li.right-answer.ui-selected {
-  background: lime;
- }
- 
-  .show-answer .selectable li.ui-selected {
-  outline-style: solid;
-  outline-width:1px;
-  outline-color: yellow;
-  color: white;
-  }
-
-  .selectable .ui-selecting { background: #FECA40; }
-  .selectable .ui-selected { background: yellow; color: black; }
-  .selectable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
-  .selectable li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }
-  
- .starscroll{
-  font-family: 'Droid+Sans', sans-serif;
-  transform: perspective(300px) rotateX(23deg);
-  text-align: justify;
-  overflow: hidden;
- }
- 
- .starscroll header {
-  font-size: 300%;
- }
- 
- .starscroll > ol {
-  width:100%;
- }
- .starscroll > li {
-  font-size: 100%;
-  text-align: justify;
-  width:100%;
-  padding-left : 50px ! important; 
- }
- 
- .starscroll > li:content {
-  text-align: justify;
- }
- 
- 
- .starscroll:after {
-	position: absolute;
-	content: ' ';
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: 60%;
-	background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.5) 0%, transparent 100%);
-	background-image: -moz-linear-gradient(top, rgba(0,0,0,1) 0%, transparent 100%);
-	background-image: -ms-linear-gradient(top, rgba(0,0,0,1) 0%, transparent 100%);
-	background-image: -o-linear-gradient(top, rgba(0,0,0,1) 0%, transparent 100%);
-	background-image: linear-gradient(top, rgba(0,0,0,1) 0%, transparent 100%);
-	pointer-events: none;
-}
-
- 
-  </style>
-
-</style>
-<!--  <script type='text/javascript' src='//code.jquery.com/jquery-git.js'></script> 
-
-transform: perspective(300px) rotateX(25deg);
--->
-
-
-  <script type="text/javascript" src="./js/jquery.countdown.js"></script>
- <!-- <script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script> -->
-  
-  
-<script type='text/javascript'>
-    
-    //<![CDATA[
-
-var questionOpen = true;
-
-function logAnswer(user,question, answer){
-}
-
-function refreshSize() {
-    var height = $(window).height();
-	var width = $(window).width() / 2 ;
-
-	console.log("computed height="+height);
-	console.log("computed width="+width);
-
-	$("#play1").css("width", height + "px");
-	$("#play1").css("height", width + "px");
-
-	$("#play2").css("width", height + "px");
-	$("#play2").css("height", width + "px");
-};
-/*
-var resizeTimer;
-$(window).resize(function() {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(refreshSize, 100);
-});
-*/
-var playerTime = new Array();
-
-$(function() {
-    /*$( ".selectable" ).selectable();*/
-	$( ".selectable" ).on("touchend",function(ev){
-	  console.log(ev);
-	  // Clean any selected
-	  $(ev.target.parentElement.childNodes).removeClass("ui-selected");
-	  $(ev.target).addClass("ui-selected");
-	  var timer = ev.currentTarget.offsetParent.children["3"].children[0];
-	  playerTime[ev.currentTarget.offsetParent.id]=timer.textContent;
-	 // $(timer).countdown('pause');
-	  //logAnswer(ev.target
-	  
-	});
-  }
-
-  
-  );
-  
-
-  
-//]]> 
-
-</script>
-  
-
 <!--
  Add CSS class show-answer to show the right answer on each side ! 
 <body class="show-answer">
 -->
 
 <div id = "play1">
-    <span class="player-name">Player 1</span>
+    
+    
+    
+    
+
 	 <img id="logo-1" class="player-logo" src="http://vignette2.wikia.nocookie.net/fr.starwars/images/a/ad/Alliance_Rebelle.svg" width="100" height="50" />
-<!--	 <img src="http://upload.wikimedia.org/wikipedia/commons/6/6c/Star_Wars_Logo.svg" width="100" height="50" />-->
-
-	 <span class="score">125</span>
+	 <span class="score">{{player[0].points}}</span>
 	 <span class="timer">{{counter}}</span>
-	 
-
 	 <div class="starscroll" ng-include="myQuestion"></div>
-
-	
+    <span class="player-name">{{player[0].firstName}} {{player[0].lastName}}</span>     
+    <div class="badges">
+        <img ng-class="{'player-badges':true, 'nobadge': player[0].badges.indexOf('creature') == -1}" src="img/chewbacca.png"/>
+        <img ng-class="{'player-badges':true, 'nobadge': player[0].badges.indexOf('planete') == -1}" src="img/planete.png"/>
+        <img ng-class="{'player-badges':true, 'nobadge': player[0].badges.indexOf('saga') == -1}" src="img/saga.png"/>
+        <img ng-class="{'player-badges':true, 'nobadge': player[0].badges.indexOf('tournage') == -1}" src="img/tournage.png"/>
+        <img ng-class="{'player-badges':true, 'nobadge': player[0].badges.indexOf('meca') == -1}" src="img/xwing.png"/>
+    </div>
 </div>	
-<div id = "play2">
-    <span class="player-name">Player 2</span>
 
+<div id="play2">
+  
 	 <img id="logo-2" class="player-logo" src="http://upload.wikimedia.org/wikipedia/en/b/b2/Galactic_Empire_emblem.svg" width="50" height="50" />
-	 <span class="score">314</span>
+	 <span class="score">{{player[1].points}}</span>
          <span class="timer">{{counter}}</timer></span>
-
+       
          <div class="starscroll" ng-include="myQuestion"></div>
-
-	 
+         
+          <span class="player-name">{{player[1].firstName}} {{player[1].lastName}}</span>
+           
+         <div class="badges">
+            <img ng-class="{'player-badges':true, 'nobadge': player[1].badges.indexOf('creature') == -1}" src="img/chewbacca.png"/>
+            <img ng-class="{'player-badges':true, 'nobadge': player[1].badges.indexOf('planete') == -1}" src="img/planete.png"/>
+            <img ng-class="{'player-badges':true, 'nobadge': player[1].badges.indexOf('saga') == -1}" src="img/saga.png"/>
+            <img ng-class="{'player-badges':true, 'nobadge': player[1].badges.indexOf('tournage') == -1}" src="img/tournage.png"/>
+            <img ng-class="{'player-badges':true, 'nobadge': player[1].badges.indexOf('meca') == -1}" src="img/xwing.png"/>
+        </div>
 </div>
 
