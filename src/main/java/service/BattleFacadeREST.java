@@ -116,10 +116,7 @@ public class BattleFacadeREST extends AbstractFacade<Battle> {
     public String countREST() {
         return String.valueOf(super.count());
     }
-    /*
-    public List<Player> highestCorrectAnswerers(){
-        
-    }
+
     @GET
     @Path("highest/{number}")
     @Produces({"application/xml", "application/json"})
@@ -127,7 +124,8 @@ public class BattleFacadeREST extends AbstractFacade<Battle> {
         // Use MongoDB Native query with regexp json sequence
         // This is required as text index ($text) is oddly not yet implementing partial word match
         //javax.persistence.Query q = getEntityManager().createNativeQuery("db.Player.find( { \"$or\" : [ { \"mail\" : { \"$regex\": \".*"+filter+".*\", \"$options\": \"si\" } }, { \"firstName\" : { \"$regex\": \".*"+filter+".*\", \"$options\": \"si\" } }, { \"lastName\": { \"$regex\": \".*"+filter+".*\", \"$options\": \"si\" } } ] } )");
-        javax.persistence.Query q = getEntityManager().createNativeQuery("db.Player.find( { \"$or\" : [ { \"mail\" : { \"$regex\": \".*"+filter+".*\", \"$options\": \"si\" } }, { \"firstName\" : { \"$regex\": \".*"+filter+".*\", \"$options\": \"si\" } }, { \"lastName\": { \"$regex\": \".*"+filter+".*\", \"$options\": \"si\" } } ] } )");
+        javax.persistence.Query q = getEntityManager().createNativeQuery("db.Player.find( { \"points\" : { \"$gt\": 0 } }, { \"_id\" : 1, \"mail\" : 1, \"firstName\" : 1, \"lastName\" : 1, \"points\" : 1 } ).sort( { \"points\": -1 } ).limit( "+number+" )");
+
         final List items = q.getResultList();
         final List<Player> players = new ArrayList<>();
         
@@ -137,7 +135,6 @@ public class BattleFacadeREST extends AbstractFacade<Battle> {
         }
         return players;
     }    
-*/
     
     @EJB PlayerFacadeREST playerService;
     @EJB QuestionFacadeREST questionService;
