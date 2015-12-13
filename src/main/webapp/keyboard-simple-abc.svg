@@ -30,8 +30,8 @@
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
-
 	  }
+	  
       .key rect {
         fill: hsla(0,0%,39%,0.5);
         stroke: gold;
