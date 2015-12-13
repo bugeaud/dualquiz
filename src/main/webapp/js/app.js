@@ -1,4 +1,4 @@
-var quizzApp = angular.module('quizzApp', ['ui.router']);
+var quizzApp = angular.module('quizzApp', ['ui.router', 'ngAnimate']);
 
 quizzApp.config(function ($stateProvider, $urlRouterProvider) {
 
@@ -14,30 +14,13 @@ quizzApp.config(function ($stateProvider, $urlRouterProvider) {
 
             // nested list with custom controller
             .state('play', {
-                url: '/play',
+                url: '/play/:battleId',
                 templateUrl: 'player.html',
                 controller: 'battleController'
             })
+           
 
-            // nested list with just some random string data
-            .state('home.paragraph', {
-                url: '/paragraph',
-                template: 'I could sure use a drink right now.'
-            })
-
-            // ABOUT PAGE AND MULTIPLE NAMED VIEWS =================================
-            .state('about', {
-                url: '/about',
-                views: {
-                    '': {templateUrl: 'partial-about.html'},
-                    'columnOne@about': {template: 'Look I am a column!'},
-                    'columnTwo@about': {
-                        templateUrl: 'table-data.html',
-                        controller: 'scotchController'
-                    }
-                }
-
-            });
+         
 
 });
 
@@ -64,7 +47,10 @@ quizzApp.service('battleService', function() {
                 "points" : 0,
                 "currentTime":0, 
                 "currentAnswer":false, 
-                "currentScore":0
+                "currentScore": 0,
+                "currentGoodAnswer":0,
+                "winner":false,
+                "abandon":false
                 };
     this.player2 = {"id" : "",
                     "firstname" : "",
@@ -74,7 +60,10 @@ quizzApp.service('battleService', function() {
                     "points" : 0,
                     "currentTime":0, 
                     "currentAnswer":false, 
-                    "currentScore":0
+                    "currentScore":0,
+                    "currentGoodAnswer":0,
+                    "winner":false,
+                    "abandon":false
                     };  
 });
 
@@ -82,7 +71,7 @@ quizzApp.service('battleService', function() {
 
 
 
-quizzApp.controller('searchController', function ($scope, $location, $http, battleService) {
+quizzApp.controller('searchController', function ($scope, $timeout, $location, $http, battleService) {
 
 
     $http.defaults.headers.common['Content-Type'] = 'application/json; charset=utf-8';
@@ -110,77 +99,137 @@ quizzApp.controller('searchController', function ($scope, $location, $http, batt
     $scope.confirm = function(user){
         if(user == 1){
             battleService.player1 = $scope.user1;
+            battleService.player1.currentScore = 0;
+            battleService.player1.currentGoodAnswer = 0;
+            battleService.player1.winner = false;
+            battleService.player1.abandon = false;
             $scope.confirmed1=true;
         }else{
             battleService.player2 = $scope.user2;
             $scope.confirmed2=true;
+            battleService.player2.currentScore = 0;
+            battleService.player2.currentGoodAnswer = 0;
+            battleService.player2.winner = false;
+            battleService.player2.abandon = false;
         }
          $scope.goPlay();
     };
+    
+    $scope.onTimeout = function(){
+        
+    }
 
+    
     $scope.goPlay = function () {
+        
 
         if (battleService.player1.id != "" && battleService.player2.id  != "") {
+            $scope.moveSaber = true;
+            
             var battleServiceUrl='http://localhost:8080/dualquiz/webresources/net.java.dualquizz.battle/new-battle';
             $http.defaults.headers.common['Content-Type'] = 'application/json; charset=utf-8';
             $http.get(battleServiceUrl
                         +"?cid=" +battleService.player1.id 
-                        +"&cid="+ battleService.player2.id
-                        +"&category=" + battleService.category).
+                    + "&cid=" + battleService.player2.id
+                    + "&category=" + battleService.category).
                     success(function (data) {
+                        battleService.battle = data;
+                        $timeout(function () {
+                            $location.url('/play/'+data.id);
+                        }, 1500);                                                 
+                    }).
+                    error(function (data) {
                         battleService.battle = data; 
-                       $location.url('/play');
+                         $timeout(function () {
+                            $location.url('/play/'+data.id);
+                        }, 1500);             
                     });
-            $location.url('/play');
+           
         }
     }
 });
 
 
-quizzApp.controller('battleController', function ($scope, $http, $timeout, battleService) {
+quizzApp.controller('battleController', function ($scope, $http, $timeout, $stateParams, battleService) {
 
  
     $scope.onTimeout = function () {
-        
-        if ($scope.counter > 0) {
-            mytimeout = $timeout($scope.onTimeout, 1000);
-            $scope.counter--;
-        } else {
-            //show answers
-            if ($scope.wait > 0) {
-                if($scope.wait == 5){
-                    battleService.player1.points += battleService.player1.currentTime;
-                    if(battleService.player1.currentAnswer){
-                        battleService.player1.currentScore += 1;
-                    }
-                    battleService.player2.points += battleService.player2.currentTime;
-                    if(battleService.player2.currentAnswer){
-                        battleService.player2.currentScore += 1;
-                    }
-                console.log("player1 : score " + battleService.player1.currentScore + " - " + battleService.player1.points );
-                console.log("player2 : score " + battleService.player2.currentScore + " - " + battleService.player2.points );
-               
-                }
-                 $scope.showAnswer = true;
+        if(!$scope.battleEnded){
+            if ($scope.counter > 0) {
                 mytimeout = $timeout($scope.onTimeout, 1000);
-                $scope.wait--;
-                
+                $scope.counter--;
             } else {
-                if ($scope.nbQuestion < 5 ){
-                    $scope.pullQuestion();
-                    $scope.reset();
-                }else{
-                    //end
-                    if(  battleService.player1.currentScore > battleService.player2.currentScore){
-                        battleService.player1.badges.push(battleService.category);
+                //show answers
+                if ($scope.wait > 0) {
+                    if($scope.wait == 5){
+                        battleService.player1.points += battleService.player1.currentTime;
+                        battleService.player1.currentScore += battleService.player1.currentTime;
+                        if(battleService.player1.currentAnswer){
+                            battleService.player1.currentGoodAnswer += 1;
+                        }
+                        battleService.player2.points += battleService.player2.currentTime;
+                        battleService.player2.currentScore += battleService.player2.currentTime;
+                        if(battleService.player2.currentAnswer){
+                            battleService.player2.currentGoodAnswer += 1;
+                        }
+                    console.log("player1 : score " + battleService.player1.currentScore + " - " + battleService.player1.points );
+                    console.log("player2 : score " + battleService.player2.currentScore + " - " + battleService.player2.points );
+
+                    }
+                     $scope.showAnswer = true;
+                    mytimeout = $timeout($scope.onTimeout, 1000);
+                    $scope.wait--;
+
+                } else {
+                    if ($scope.nbQuestion < nbQuestionMax ){
+                        $scope.pullQuestion();
+                        $scope.reset();
                     }else{
-                         battleService.player2.badges.push(battleService.category);
+                        //end
+                        $scope.endBattle();
                     }
                 }
             }
-
         }
     };
+    
+    $scope.abandon = function(player){
+        if(player == 0){
+            battleService.player1.abandon = true;
+            battleService.player1.currentScore = 0;
+            battleService.player1.currentGoodAnswer = 0;
+            battleService.player2.currentScore = 50;
+            battleService.player2.currentGoodAnswer = 1;            
+        }else{
+            battleService.player2.abandon = true;
+            battleService.player2.currentScore = 0;
+            battleService.player2.currentGoodAnswer = 0;
+            battleService.player1.currentScore = 50;
+            battleService.player1.currentGoodAnswer = 1;
+        }
+        battleService.player1.points += battleService.player1.currentScore;
+        battleService.player2.points += battleService.player2.currentScore;
+        $scope.endBattle();
+    }
+    
+    $scope.endBattle = function () {
+        var score1 = battleService.player1.currentScore;
+        var score2 = battleService.player2.currentScore;
+        var goodAnswer1 = battleService.player1.currentGoodAnswer;
+        var goodAnswer2 = battleService.player2.currentGoodAnswer;
+        if (!(goodAnswer1 == 0 && goodAnswer2 == 0)) {
+            if (goodAnswer1 > goodAnswer2
+                    || (goodAnswer1 == goodAnswer2 && score1 > score2)
+                    ) {
+                battleService.player1.badges.push(battleService.category);
+                battleService.player1.winner = true;
+            } else {
+                battleService.player2.badges.push(battleService.category);
+                battleService.player2.winner = true;
+            }
+        }
+        $scope.battleEnded = true;
+    }
     
     
     $scope.reset= function(){
@@ -190,6 +239,7 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, battl
     };
 
     $scope.myQuestion = 'question.html';
+    $scope.end = 'end.html';
     
     $scope.pullQuestion = function () {
         $scope.showAnswer=false;
@@ -199,12 +249,15 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, battl
                     console.log(data);
                     $scope.description = data.description;
                     $scope.nbQuestion += 1;
-                 
-                      $scope.proposals = [ 
-                        {"id":1,  "label" : "Vert"},
-                        {"id":2,  "label" : "Orange"},
-                        {"id":3,  "label" : "Rouge", "correct" : true},
-                        {"id":4,  "label" : "#FFFFFF00 (c'est un geek fan d'alpha)"}];
+                    battleService.player1.currentTime = 0;
+                    battleService.player1.currentAnswer = false;
+                    battleService.player2.currentTime = 0;
+                    battleService.player2.currentAnswer = false;
+                    $scope.proposals = [
+                        {"id": 1, "label": "Vert"},
+                        {"id": 2, "label": "Orange"},
+                        {"id": 3, "label": "Rouge", "correct": true},
+                        {"id": 4, "label": "#FFFFFF00 (c'est un geek fan d'alpha)"}];
                 });
     };
 
@@ -229,13 +282,15 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, battl
     };
    
      
-   
+    $scope.category = battleService.category;
     $scope.showAnswer=false;
+    $scope.battleEnded=false;
     $scope.player=[battleService.player1, battleService.player2];
     var delay = 10;
     $scope.counter = delay;
     $scope.wait = 5;
     $scope.nbQuestion = 0;
+    var nbQuestionMax = 2;
     var mytimeout = $timeout($scope.onTimeout,1000);
     $scope.pullQuestion();
     

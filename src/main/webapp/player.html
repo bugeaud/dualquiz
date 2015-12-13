@@ -4,41 +4,77 @@
 -->
 
 <div id = "play1">
-    
-    
-    
-    
-
-	 <img id="logo-1" class="player-logo" src="http://vignette2.wikia.nocookie.net/fr.starwars/images/a/ad/Alliance_Rebelle.svg" width="100" height="50" />
+    <a ng-click="abandon(2)" class="abandon">Abandon</a>
 	 <span class="score">{{player[0].points}}</span>
 	 <span class="timer">{{counter}}</span>
-	 <div class="starscroll" ng-include="myQuestion"></div>
+	 
+         <div class="starscroll" ng-include="myQuestion" ng-hide="battleEnded"></div>
+          <div  class="result" ng-show="battleEnded">
+             <span ng-if="player[0].winner" class="animate-if">
+                 Vous avez gagné le combat.</br>
+                 Vous remportez le badge {{category}}<br/>
+                 <img ng-src="{{'img/'+category+'.png'}}" width="100"/>
+                 
+            </span>
+              <span ng-if="!player[0].winner" class="animate-if">
+                 <span ng-if="!player[0].abandon">
+                 Vous avez perdu le combat.</br>
+                 </span>
+                  <span ng-if="player[0].abandon">
+                 Vous avez fuit le combat.</br>
+                 </span>
+                 Défiez quelqu'un d'autre pour remporter le badge {{category}}<br/>
+                   <img class="nobadge" ng-src="{{'img/'+category+'.png'}}" width="100"/>
+              </span>
+              <a ui-sref="start" class="myButton">Commencer un combat</a>
+         </div>  
+         
     <span class="player-name">{{player[0].firstName}} {{player[0].lastName}}</span>     
     <div class="badges">
-        <img ng-class="{'player-badges':true, 'nobadge': player[0].badges.indexOf('creature') == -1}" src="img/chewbacca.png"/>
-        <img ng-class="{'player-badges':true, 'nobadge': player[0].badges.indexOf('planete') == -1}" src="img/planete.png"/>
+        <img ng-class="{'player-badges':true, 'nobadge': player[0].badges.indexOf('creature') == -1}" src="img/creature.png"/>
+        <img ng-class="{'player-badges':true, 'nobadge': player[0].badges.indexOf('univers') == -1}" src="img/univers.png"/>
         <img ng-class="{'player-badges':true, 'nobadge': player[0].badges.indexOf('saga') == -1}" src="img/saga.png"/>
         <img ng-class="{'player-badges':true, 'nobadge': player[0].badges.indexOf('tournage') == -1}" src="img/tournage.png"/>
-        <img ng-class="{'player-badges':true, 'nobadge': player[0].badges.indexOf('meca') == -1}" src="img/xwing.png"/>
+        <img ng-class="{'player-badges':true, 'nobadge': player[0].badges.indexOf('meca') == -1}" src="img/meca.png"/>
     </div>
 </div>	
 
 <div id="play2">
   
-	 <img id="logo-2" class="player-logo" src="http://upload.wikimedia.org/wikipedia/en/b/b2/Galactic_Empire_emblem.svg" width="50" height="50" />
+         <a ng-click="abandon(1)" class="abandon">Abandon</a>
 	 <span class="score">{{player[1].points}}</span>
          <span class="timer">{{counter}}</timer></span>
        
-         <div class="starscroll" ng-include="myQuestion"></div>
+         <div class="starscroll" ng-include="myQuestion" ng-hide="battleEnded"></div>
+          <div  class="result" ng-show="battleEnded">
+             <span ng-if="player[1].winner" class="animate-if">
+                 Vous avez gagné le combat.</br>
+                 Vous remportez le badge {{category}}<br/>
+                  <img ng-src="{{'img/'+category+'.png'}}" width="100"/>
+                 
+            </span>
+              <span ng-if="!player[1].winner" class="animate-if">
+                 <span ng-if="!player[1].abandon">
+                 Vous avez perdu le combat.</br>
+                 </span>
+                  <span ng-if="player[1].abandon">
+                 Vous avez fuit le combat.</br>
+                 </span>
+                 Défiez quelqu'un d'autre pour remporter le badge {{category}}<br/>
+                  <img class="nobadge" ng-src="{{'img/'+category+'.png'}}" width="100"/>
+                  
+              </span>
+              <a ui-sref="start" class="myButton">Commencer un combat</a>
+         </div>         
          
           <span class="player-name">{{player[1].firstName}} {{player[1].lastName}}</span>
            
-         <div class="badges">
-            <img ng-class="{'player-badges':true, 'nobadge': player[1].badges.indexOf('creature') == -1}" src="img/chewbacca.png"/>
-            <img ng-class="{'player-badges':true, 'nobadge': player[1].badges.indexOf('planete') == -1}" src="img/planete.png"/>
-            <img ng-class="{'player-badges':true, 'nobadge': player[1].badges.indexOf('saga') == -1}" src="img/saga.png"/>
-            <img ng-class="{'player-badges':true, 'nobadge': player[1].badges.indexOf('tournage') == -1}" src="img/tournage.png"/>
-            <img ng-class="{'player-badges':true, 'nobadge': player[1].badges.indexOf('meca') == -1}" src="img/xwing.png"/>
-        </div>
+        <div class="badges">
+        <img ng-class="{'player-badges':true, 'nobadge': player[0].badges.indexOf('creature') == -1}" src="img/creature.png"/>
+        <img ng-class="{'player-badges':true, 'nobadge': player[0].badges.indexOf('univers') == -1}" src="img/univers.png"/>
+        <img ng-class="{'player-badges':true, 'nobadge': player[0].badges.indexOf('saga') == -1}" src="img/saga.png"/>
+        <img ng-class="{'player-badges':true, 'nobadge': player[0].badges.indexOf('tournage') == -1}" src="img/tournage.png"/>
+        <img ng-class="{'player-badges':true, 'nobadge': player[0].badges.indexOf('meca') == -1}" src="img/meca.png"/>
+    </div>
 </div>
 
