@@ -3,6 +3,7 @@ package net.java.dualquizz.model;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,10 +29,10 @@ public class Battle implements Serializable {
     private String category;
     
     @MapKeyColumn(name = "playerId")
-    //@Column(name= "boardScore")
+    @Column(name= "boardScore")
     @ElementCollection
     //private Map<Player,Integer> board = new HashMap<>();
-    private Map<Integer,Integer> boardMembers = new HashMap<>();
+    private Map<String,Integer> boardMembers = new HashMap<>();
 
     public String getId() {
         return id;
@@ -83,14 +84,14 @@ public class Battle implements Serializable {
     /**
      * @return the board
      */
-    public Map<Integer,Integer> getBoardMembers() {
+    public Map<String,Integer> getBoardMembers() {
         return boardMembers;
     }
 
     /**
      * @param boardMembers the board members to set
      */
-    public void setBoardMembers(Map<Integer,Integer> boardMembers) {
+    public void setBoardMembers(Map<String,Integer> boardMembers) {
         this.boardMembers = boardMembers;
     }
     

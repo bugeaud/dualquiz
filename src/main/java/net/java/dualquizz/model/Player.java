@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  * Represents a player of a DualQuizz game
@@ -30,8 +31,9 @@ public class Player implements Serializable {
     public static final String KEY_PLAYER_COUNT_FROM_MAIL = "player.countFromMail";
     
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id;
 
     private String mail;
     private String firstName;
@@ -41,13 +43,13 @@ public class Player implements Serializable {
     @ElementCollection(fetch=FetchType.EAGER) 
     private List<String> badges;
     
-    private int points = 0;
+    private Integer points = 0;
     
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -135,14 +137,14 @@ public class Player implements Serializable {
     /**
      * @return the points
      */
-    public int getPoints() {
+    public Integer getPoints() {
         return points;
     }
 
     /**
      * @param points the points to set
      */
-    public void setPoints(int points) {
+    public void setPoints(Integer points) {
         this.points = points;
     }
     

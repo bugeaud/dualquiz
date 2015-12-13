@@ -1,5 +1,6 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import net.java.dualquizz.model.Battle;
 import net.java.dualquizz.model.Player;
+import net.java.dualquizz.model.Question;
+import static service.PlayerFacadeREST.createPlayer;
 
 
 /**
@@ -47,24 +50,27 @@ public class BattleFacadeREST extends AbstractFacade<Battle> {
     @GET
     @Path("new-battle")
     @Produces({"application/json", "application/xml"})
-    public Battle newBattle(@QueryParam("cid") List<Integer> playerIds, @QueryParam("category") String category) {
+    public Battle newBattle(@QueryParam("cid") List<String> playerIds) {
         if(playerIds==null || playerIds.size()<2){
             // There can only be a battle with at lease two supposed playser
             return null;
         }
-        final List<Integer> confirmedContenderIds = playerIds.stream()
-                    .filter(p -> playerService.find(p)!=null )
+        final List<String> confirmedContenderIds = playerIds.stream()
+                    .filter(
+                            p ->{
+                             return playerService.find(p)!=null ;
+                            }
+                    )
                     .collect(Collectors.toList());  
         
         // Let's create an empty battle
         final Battle battle = new Battle();
         // Fill in the board according to the confirmed contenders
-        Map<Integer, Integer> map = confirmedContenderIds.stream()
+        final Map<String, Integer> map = confirmedContenderIds.stream()
                                     .collect(Collectors.toMap(Function.identity(),
                                                               (p) -> 0));
                 
-        battle.setBoardMembers(map);
-        battle.setCategory(category);
+        battle.setBoardMembers(map);        
         super.create(battle);
         return battle;
     }
@@ -111,6 +117,25 @@ public class BattleFacadeREST extends AbstractFacade<Battle> {
         return String.valueOf(super.count());
     }
 
+    @GET
+    @Path("highest/{number}")
+    @Produces({"application/xml", "application/json"})
+    public List<Player> highestCorrectAnswerers(@PathParam("number") int number) {
+        // Use MongoDB Native query with regexp json sequence
+        // This is required as text index ($text) is oddly not yet implementing partial word match
+        //javax.persistence.Query q = getEntityManager().createNativeQuery("db.Player.find( { \"$or\" : [ { \"mail\" : { \"$regex\": \".*"+filter+".*\", \"$options\": \"si\" } }, { \"firstName\" : { \"$regex\": \".*"+filter+".*\", \"$options\": \"si\" } }, { \"lastName\": { \"$regex\": \".*"+filter+".*\", \"$options\": \"si\" } } ] } )");
+        javax.persistence.Query q = getEntityManager().createNativeQuery("db.Player.find( { \"points\" : { \"$gt\": 0 } }, { \"_id\" : 1, \"mail\" : 1, \"firstName\" : 1, \"lastName\" : 1, \"points\" : 1 } ).sort( { \"points\": -1 } ).limit( "+number+" )");
+
+        final List items = q.getResultList();
+        final List<Player> players = new ArrayList<>();
+        
+        // Perform some lazy MongoDB returned data to Java beans mapping so that it can produces the expected format
+        for(Object obj : items){
+            players.add(createPlayer((Object[])obj));
+        }
+        return players;
+    }    
+    
     @EJB PlayerFacadeREST playerService;
     @EJB QuestionFacadeREST questionService;
         
@@ -119,27 +144,41 @@ public class BattleFacadeREST extends AbstractFacade<Battle> {
     @Produces({"application/xml", "application/json"})
     public Battle correctAnswer(@PathParam("id") String id,
                                 @PathParam("battleId") String battleId,
-                                @PathParam("playerId") Integer playerId,
+                                @PathParam("playerId") String playerId,
                                 @PathParam("questionId") String questionId,
                                 @PathParam("proposalId") String proposalId) {
-        Battle battle = find(id);
+        Battle battle = find(battleId);
         if(battle==null){
             // Not even the battle identifier is fine, no chance to perform the request
             return null;
         }
-        if(!questionService.isCorrecAnswer(questionId, proposalId)){
+        if(!questionService.isCorrectAnswer(questionId, proposalId)){
             // This is a wrong request simply ignore it
             return battle;
         }
         // check that the provided using is existing
-        final Map<Integer, Integer> board = battle.getBoardMembers();
+        final Map<String, Integer> board = battle.getBoardMembers();
         if(!board.containsKey(playerId)){
             // nobody was found, we sillently ignore the mistake
             return battle;
         }
-        // Everything is fine, let's give the reward
+        // Everything is fine, let's give the reward on the battle
         board.put(playerId, board.get(playerId) + 1);
-                
+
+        // Alright, let's give a point also on the player's score
+        final Player p = playerService.find(playerId);
+        p.setPoints((p.getPoints()==null ? 0 : p.getPoints() ) +1);
+        
+        // Each and every 3 points you get the corresponding badge and ten points at the player level
+        if(board.get(playerId) % 3 == 0){
+           final Question q = questionService.find(questionId);
+           final String category = q.getCategory();
+           final List<String> badges = p.getBadges();
+           badges.add(category);
+           p.setBadges(badges);
+           p.setPoints((p.getPoints()==null ? 0 : p.getPoints() ) +10);
+        }
+
         return battle;
     }
   
