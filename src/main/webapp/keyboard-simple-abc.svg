@@ -50,198 +50,118 @@
     ]]></style>
   </defs>
   
-  <script type="text/ecmascript"><![CDATA[
-  "use strict";
-  
-	var hasClass = (typeof document.documentElement.classList == "undefined") ?
-    function(el, clss) {
-        return el.className && new RegExp("(^|\\s)" +
-               clss + "(\\s|$)").test(el.className);
-    } :
-    function(el, clss) {
-        return el.classList.contains(clss);
-    };
-  
-	function registerKeys(){
-	 console.log("Step 3");
-	 let keys = document.getElementsByClassName("key");
-	 Array.prototype.forEach.call(keys, function(element) {
-		//console.log(element);
-		element.addEventListener("touchend",keyKeyed, false);
-		//element.addEventListener("click",keyKeyed, false);
-	 });
-	 
-	}
-	
-        function getKeyTarget(element){
-            if (hasClass(element,"key")){
-                return element;
-            }else if(element.parentNode == document){
-                // Safeguard, should not be possible if key register was scoped correctly
-                return null;
-            }else{
-                return element.parentNode;
-            }
-        }
-      
-        function addIdentifierCharacter(c){
-            //console.log("Char "+c);
-            let inputElement = document.getElementById("input");
-            inputElement.textContent = inputElement.textContent + c;
-            //console.log(inputElement.textContent);
-            
-        }
-        function clearIdentifier(){
-            console.log("Back");
-            let inputElement = document.getElementById("input");
-            inputElement.textContent = "";
-        }
-        function backIdentifier(){
-            console.log("Select");
-			let inputElement = document.getElementById("input");
-            inputElement.textContent = inputElement.textContent.slice(0,-1);
-        }
-      
-	function keyKeyed(event){
-		let keyElement = getKeyTarget(event.target);
-		
-		// Simulate CSS class "blink" with "last-selected"
-		keyElement.classList.remove("last-selected");
-		setTimeout(function (){
-			keyElement.classList.add("last-selected");
-		},50);
-		
-        switch(keyElement.id){
-            case "clear" : {
-                clearIdentifier();
-            } break;
-            case "back" : {
-                backIdentifier();
-            } break;
-            default :
-                addIdentifierCharacter(keyElement.id);
-          }
-	}
- 
-	console.log("Step 1");
-	let root = document.getElementById("magic-keyboard");
-	root.addEventListener('load', registerKeys, false);
-	console.log("Step 2");
- 
-  ]]></script>
-  
   
   <g id="a" class="key letter" transform="translate(10,10)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">A</text>
+    <text x="25" y="25" text-anchor="end" key>A</text>
   </g>  
   <g id="b" class="key letter" transform="translate(80,10)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">B</text>
+    <text x="25" y="25" text-anchor="end" key>B</text>
   </g>
   <g id="c" class="key letter" transform="translate(150,10)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">C</text>
+    <text x="25" y="25" text-anchor="end" key>C</text>
   </g>
   <g id="d" class="key letter" transform="translate(220,10)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">D</text>
+    <text x="25" y="25" text-anchor="end" key>D</text>
   </g>
   <g id="e" class="key letter" transform="translate(290,10)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">E</text>
+    <text x="25" y="25" text-anchor="end" key>E</text>
   </g>
   <g id="f" class="key letter" transform="translate(360,10)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">F</text>
+    <text x="25" y="25" text-anchor="end" key>F</text>
   </g>
   <g id="g" class="key letter" transform="translate(430,10)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">G</text>
+    <text x="25" y="25" text-anchor="end" key>G</text>
   </g>
   <g id="h" class="key letter" transform="translate(500,10)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">H</text>
+    <text x="25" y="25" text-anchor="end" key>H</text>
   </g>
   <g id="i" class="key letter" transform="translate(10,80)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">I</text>
+    <text x="25" y="25" text-anchor="end" key>I</text>
   </g>  
   <g id="j" class="key letter" transform="translate(80,80)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">J</text>
+    <text x="25" y="25" text-anchor="end" key>J</text>
   </g>
   <g id="k" class="key letter" transform="translate(150,80)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">K</text>
+    <text x="25" y="25" text-anchor="end" key>K</text>
   </g>
   <g id="l" class="key letter" transform="translate(220,80)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">L</text>
+    <text x="25" y="25" text-anchor="end" key>L</text>
   </g>
   <g id="m" class="key letter" transform="translate(290,80)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">M</text>
+    <text x="25" y="25" text-anchor="end" key>M</text>
   </g>
   <g id="n" class="key letter" transform="translate(360,80)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">N</text>
+    <text x="25" y="25" text-anchor="end" key>N</text>
   </g>
   <g id="o" class="key letter" transform="translate(430,80)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">O</text>
+    <text x="25" y="25" text-anchor="end" key>O</text>
   </g>
   <g id="p" class="key letter" transform="translate(500,80)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">P</text>
+    <text x="25" y="25" text-anchor="end" key>P</text>
   </g>
   <g id="q" class="key letter" transform="translate(10,150)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">Q</text>
+    <text x="25" y="25" text-anchor="end" key>Q</text>
   </g>  
   <g id="r" class="key letter" transform="translate(80,150)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">R</text>
+    <text x="25" y="25" text-anchor="end" key>R</text>
   </g>
   <g id="s" class="key letter" transform="translate(150,150)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">S</text>
+    <text x="25" y="25" text-anchor="end" key>S</text>
   </g>
   <g id="t" class="key letter" transform="translate(220,150)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">T</text>
+    <text x="25" y="25" text-anchor="end" key>T</text>
   </g>
   <g id="u" class="key letter" transform="translate(290,150)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">U</text>
+    <text x="25" y="25" text-anchor="end" key>U</text>
   </g>
   <g id="v" class="key letter" transform="translate(360,150)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">V</text>
+    <text x="25" y="25" text-anchor="end" key>V</text>
   </g>
   <g id="w" class="key letter" transform="translate(430,150)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">W</text>
+    <text x="25" y="25" text-anchor="end" key>W</text>
   </g>
   <g id="x" class="key letter" transform="translate(500,150)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">X</text>
+    <text x="25" y="25" text-anchor="end" key>X</text>
   </g>
   <g id="y" class="key letter" transform="translate(220,220)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">Y</text>
+    <text x="25" y="25" text-anchor="end" key>Y</text>
   </g>
   <g id="z" class="key letter" transform="translate(290,220)">
     <rect width="60" height="60" x="0" y="0" ry="10" />
-    <text x="25" y="25" text-anchor="end">Z</text>
+    <text x="25" y="25" text-anchor="end" key>Z</text>
   </g>
   <g id="back" class="key command" transform="translate(80,220)">
     <rect width="130" height="60" x="0" y="0" ry="10" />
-    <text x="15" y="25" >Back</text>
+    <text x="15" y="25" key>Back</text>
   </g>
   <g id="clear" class="key command" transform="translate(360,220)">
     <rect width="130" height="60" x="0" y="0" ry="10" />
-    <text x="15" y="25" >Clear</text>
+    <text x="15" y="25" key>Clear</text>
   </g>
   
 </svg>

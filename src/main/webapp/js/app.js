@@ -39,12 +39,7 @@ quizzApp.service('battleService', function() {
     this.battle={"id" :"",
                   "boardMembers":[]};
     
-    this.player1 = {"id" : "",
-                "firstname" : "",
-                "lastname" : "", 
-                "email" : "",  
-                "badges" : [],
-                "points" : 0,
+    this.player1 = {"player":null,
                 "currentTime":0, 
                 "currentAnswer":false, 
                 "currentScore": 0,
@@ -52,12 +47,7 @@ quizzApp.service('battleService', function() {
                 "winner":false,
                 "abandon":false
                 };
-    this.player2 = {"id" : "",
-                    "firstname" : "",
-                    "lastname" : "", 
-                    "email" : "",  
-                    "badges" : [],
-                    "points" : 0,
+    this.player2 = {"player":null,
                     "currentTime":0, 
                     "currentAnswer":false, 
                     "currentScore":0,
@@ -98,14 +88,14 @@ quizzApp.controller('searchController', function ($scope, $timeout, $location, $
     
     $scope.confirm = function(user){
         if(user == 1){
-            battleService.player1 = $scope.user1;
+            battleService.player1.player = $scope.user1;
             battleService.player1.currentScore = 0;
             battleService.player1.currentGoodAnswer = 0;
             battleService.player1.winner = false;
             battleService.player1.abandon = false;
             $scope.confirmed1=true;
         }else{
-            battleService.player2 = $scope.user2;
+            battleService.player2.player = $scope.user2;
             $scope.confirmed2=true;
             battleService.player2.currentScore = 0;
             battleService.player2.currentGoodAnswer = 0;
@@ -123,7 +113,7 @@ quizzApp.controller('searchController', function ($scope, $timeout, $location, $
     $scope.goPlay = function () {
         
 
-        if (battleService.player1.id != "" && battleService.player2.id  != "") {
+        if (battleService.player1.player != null && battleService.player2.player  != null) {
             $scope.moveSaber = true;
             
             var battleServiceUrl='http://localhost:8080/dualquiz/webresources/net.java.dualquizz.battle/new-battle';
@@ -162,18 +152,18 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, $stat
                 //show answers
                 if ($scope.wait > 0) {
                     if($scope.wait == 5){
-                        battleService.player1.points += battleService.player1.currentTime;
+                        battleService.player1.player.points += battleService.player1.currentTime;
                         battleService.player1.currentScore += battleService.player1.currentTime;
                         if(battleService.player1.currentAnswer){
                             battleService.player1.currentGoodAnswer += 1;
                         }
-                        battleService.player2.points += battleService.player2.currentTime;
+                        battleService.player2.player.points += battleService.player2.currentTime;
                         battleService.player2.currentScore += battleService.player2.currentTime;
                         if(battleService.player2.currentAnswer){
                             battleService.player2.currentGoodAnswer += 1;
                         }
-                    console.log("player1 : score " + battleService.player1.currentScore + " - " + battleService.player1.points );
-                    console.log("player2 : score " + battleService.player2.currentScore + " - " + battleService.player2.points );
+                    console.log("player1 : score " + battleService.player1.currentScore + " - " + battleService.player1.player.points );
+                    console.log("player2 : score " + battleService.player2.currentScore + " - " + battleService.player2.player.points );
 
                     }
                      $scope.showAnswer = true;
@@ -196,19 +186,22 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, $stat
     $scope.abandon = function(player){
         if(player == 0){
             battleService.player1.abandon = true;
+            $scope.player[0].abandon=true;
             battleService.player1.currentScore = 0;
             battleService.player1.currentGoodAnswer = 0;
             battleService.player2.currentScore = 50;
-            battleService.player2.currentGoodAnswer = 1;            
+            battleService.player2.currentGoodAnswer = 1;    
+            
         }else{
             battleService.player2.abandon = true;
+            $scope.player[1].abandon=true;
             battleService.player2.currentScore = 0;
             battleService.player2.currentGoodAnswer = 0;
             battleService.player1.currentScore = 50;
             battleService.player1.currentGoodAnswer = 1;
         }
-        battleService.player1.points += battleService.player1.currentScore;
-        battleService.player2.points += battleService.player2.currentScore;
+        battleService.player1.player.points += battleService.player1.currentScore;
+        battleService.player2.player.points += battleService.player2.currentScore;
         $scope.endBattle();
     }
     
@@ -221,11 +214,13 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, $stat
             if (goodAnswer1 > goodAnswer2
                     || (goodAnswer1 == goodAnswer2 && score1 > score2)
                     ) {
-                battleService.player1.badges.push(battleService.category);
+                battleService.player1.player.badges.push(battleService.category);
                 battleService.player1.winner = true;
+                $scope.player[0].winner=true;
             } else {
-                battleService.player2.badges.push(battleService.category);
+                battleService.player2.player.badges.push(battleService.category);
                 battleService.player2.winner = true;
+                $scope.player[1].winner=true;
             }
         }
         $scope.battleEnded = true;
@@ -277,15 +272,13 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, $stat
             battleService.player2.currentAnswer = correct;
         }
         
-        
-
     };
    
      
     $scope.category = battleService.category;
     $scope.showAnswer=false;
     $scope.battleEnded=false;
-    $scope.player=[battleService.player1, battleService.player2];
+    $scope.player=[battleService.player1.player, battleService.player2.player];
     var delay = 10;
     $scope.counter = delay;
     $scope.wait = 5;
@@ -295,4 +288,55 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, $stat
     $scope.pullQuestion();
     
 });
+
+
+angular.module('quizzApp').directive('svgMap', ['$compile', function ($compile) {
+    return {
+        restrict: 'A',
+        templateUrl: 'keyboard-simple-abc.svg',
+         scope: {
+            search: "=",
+        },
+        link: function (scope, element, attrs) {
+            console.log(attrs);
+            var keys = element[0].querySelectorAll('.key');
+            angular.forEach(keys, function (path, key) {
+                var keyElement = angular.element(path);
+                keyElement.attr("key", "");
+                keyElement.attr("search", "search");
+                $compile(keyElement)(scope);
+            })
+        }
+    }
+}]);
+
+angular.module('quizzApp').directive('key', ['$compile', function ($compile) {
+    return {
+        restrict: 'A',
+        scope: {
+            search: "=",
+        },
+        link: function (scope, element, attrs) {
+            scope.elementId = element.attr("id");
+            scope.keyClick = function () {
+                // alert(scope.elementId);
+                if(angular.isUndefined(scope.search) || scope.elementId == "clear"){
+                    scope.search = "";
+                }
+                else if(scope.elementId == "back"){
+                    scope.search = scope.search.substring( 0, scope.search.length-1 );
+                }else {
+                    scope.search += scope.elementId;
+                }
+            };
+            element.attr("ng-click", "keyClick()");
+            element.removeAttr("key");
+            $compile(element)(scope);
+        }
+    }
+}]);
+
+
+
+
 

@@ -3,12 +3,13 @@
         <form>
             <div ng-show="confirmed1 == false">
 
-                <input name="search" type="text" ng-min-length="3" ng-model="search1" />
+                <input name="search" type="search" ng-min-length="3" ng-model="search1" />
                 <button ng-click="confirm(1)" ng-show="checked1">Commencer</button>
 
                 <ul>
                     <li ng-repeat="list in templateList| filter:search1 " ng-click="setValue1(list)">{{list.firstName}} {{list.lastName}}</li>
                 </ul>
+                 <div svg-map search="search1"></div>
             </div>
 
             <div class="deco">
@@ -29,12 +30,13 @@
         <form>
             <div ng-show="confirmed2 == false">
 
-                <input name="search" type="text" ng-min-length="3" ng-model="search2" />
+                <input name="search" type="search" ng-min-length="3" ng-model="search2" />
                 <button ng-click="confirm(2)" ng-show="checked2">Commencer</button>
 
                 <ul>
                     <li ng-repeat="list in templateList| filter:search2 " ng-click="setValue2(list)">{{list.firstName}} {{list.lastName}}</li>
                 </ul>
+                <div svg-map search="search2"></div>
             </div>
             <div class="deco">
                 <div class="lightsaber">
