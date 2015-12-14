@@ -8,7 +8,7 @@ quizzApp.config(function ($stateProvider, $urlRouterProvider) {
 
             // HOME STATES AND NESTED VIEWS ========================================
             .state('start', {
-                url: '/start',
+                url: '/start?category',
                 templateUrl: 'start.html'
             })
 
@@ -34,7 +34,7 @@ quizzApp.directive('testChange', function () {
 
 
 quizzApp.service('battleService', function() {
-    this.category="saga";
+    this.category="";
     
     this.battle={"id" :"",
                   "boardMembers":[]};
@@ -55,6 +55,7 @@ quizzApp.service('battleService', function() {
                     "winner":false,
                     "abandon":false
                     };  
+   
 });
 
 
@@ -62,13 +63,10 @@ quizzApp.service('battleService', function() {
 
 
 quizzApp.controller('searchController', function ($scope, $timeout, $location, $http, battleService) {
-
-
-    $http.defaults.headers.common['Content-Type'] = 'application/json; charset=utf-8';
-    $http.get('http://localhost:8080/dualquiz/webresources/net.java.dualquizz.player').
-            success(function (data) {
-               $scope.templateList = data;
-            });     
+   
+   var params = $location.search();
+   battleService.category=params.category;
+   
     $scope.confirmed1=false;
     $scope.confirmed2=false;
 
@@ -89,6 +87,9 @@ quizzApp.controller('searchController', function ($scope, $timeout, $location, $
     $scope.confirm = function(user){
         if(user == 1){
             battleService.player1.player = $scope.user1;
+            if(angular.isUndefined($scope.user1.badges)){
+                battleService.player1.player.badges=[];
+            }
             battleService.player1.currentScore = 0;
             battleService.player1.currentGoodAnswer = 0;
             battleService.player1.winner = false;
@@ -96,6 +97,9 @@ quizzApp.controller('searchController', function ($scope, $timeout, $location, $
             $scope.confirmed1=true;
         }else{
             battleService.player2.player = $scope.user2;
+            if(angular.isUndefined($scope.user2.badges)){
+                battleService.player2.player.badges=[];
+            }
             $scope.confirmed2=true;
             battleService.player2.currentScore = 0;
             battleService.player2.currentGoodAnswer = 0;
@@ -116,7 +120,7 @@ quizzApp.controller('searchController', function ($scope, $timeout, $location, $
         if (battleService.player1.player != null && battleService.player2.player  != null) {
             $scope.moveSaber = true;
             
-            var battleServiceUrl='http://localhost:8080/dualquiz/webresources/net.java.dualquizz.battle/new-battle';
+            var battleServiceUrl='/dualquiz/webresources/net.java.dualquizz.battle/new-battle';
             $http.defaults.headers.common['Content-Type'] = 'application/json; charset=utf-8';
             $http.get(battleServiceUrl
                         +"?cid=" +battleService.player1.id 
@@ -234,12 +238,12 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, $stat
     };
 
     $scope.myQuestion = 'question.html';
-    $scope.end = 'end.html';
+  
     
     $scope.pullQuestion = function () {
         $scope.showAnswer=false;
         $http.defaults.headers.common['Content-Type'] = 'application/json; charset=utf-8';
-        $http.get('http://localhost:8080/dualquiz/webresources/net.java.dualquizz.question/random').
+        $http.get('/dualquiz/webresources/net.java.dualquizz.question/random').
                 success(function (data) {
                     console.log(data);
                     $scope.description = data.description;
@@ -253,6 +257,7 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, $stat
                         {"id": 2, "label": "Orange"},
                         {"id": 3, "label": "Rouge", "correct": true},
                         {"id": 4, "label": "#FFFFFF00 (c'est un geek fan d'alpha)"}];
+                   $scope.proposals.sort(function() { return 0.5 - Math.random() });
                 });
     };
 
@@ -296,27 +301,33 @@ angular.module('quizzApp').directive('svgMap', ['$compile', function ($compile) 
         templateUrl: 'keyboard-simple-abc.svg',
          scope: {
             search: "=",
+            template : "="
         },
         link: function (scope, element, attrs) {
-            console.log(attrs);
+          
             var keys = element[0].querySelectorAll('.key');
             angular.forEach(keys, function (path, key) {
                 var keyElement = angular.element(path);
                 keyElement.attr("key", "");
                 keyElement.attr("search", "search");
+                keyElement.attr("template", "template   ");
                 $compile(keyElement)(scope);
             })
+            
         }
     }
+   
 }]);
 
-angular.module('quizzApp').directive('key', ['$compile', function ($compile) {
+angular.module('quizzApp').directive('key', ['$compile','$http', function ($compile, $http) {
     return {
         restrict: 'A',
         scope: {
             search: "=",
+            template : "="
         },
-        link: function (scope, element, attrs) {
+        link: function (scope, element, attrs ) {
+         
             scope.elementId = element.attr("id");
             scope.keyClick = function () {
                 // alert(scope.elementId);
@@ -328,9 +339,21 @@ angular.module('quizzApp').directive('key', ['$compile', function ($compile) {
                 }else {
                     scope.search += scope.elementId;
                 }
+                if (scope.search.length >= 3) {
+                        $http.get('/dualquiz/webresources/net.java.dualquizz.player/find/' + scope.search).
+                                then(function (response) {
+                                    scope.template = response.data;
+                                    });
+
+                    } else {
+                       scope.template = [];
+                    }
             };
+             
+        
             element.attr("ng-click", "keyClick()");
             element.removeAttr("key");
+            
             $compile(element)(scope);
         }
     }

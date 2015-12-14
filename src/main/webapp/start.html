@@ -1,18 +1,19 @@
 <div ng-controller="searchController" >
     <div id="play1">
         <form>
-            <div ng-show="confirmed1 == false">
-
-                <input name="search" type="search" ng-min-length="3" ng-model="search1" />
-                <button ng-click="confirm(1)" ng-show="checked1">Commencer</button>
-
-                <ul>
-                    <li ng-repeat="list in templateList| filter:search1 " ng-click="setValue1(list)">{{list.firstName}} {{list.lastName}}</li>
-                </ul>
-                 <div svg-map search="search1"></div>
+            <div ng-show="!confirmed1">              
+                <div class="name-box">
+                    <input type="hidden" ng-model="search1" >
+                    {{search1}}<button ng-click="confirm(1)" ng-show="checked1" class="go">Commencer</button>
+                    <input type="hidden" ng-model="templateList1">
+                    <ul>
+                        <li ng-repeat="list in templateList1| filter:search1" ng-click="setValue1(list)">{{list.firstName}} {{list.lastName}}</li>
+                    </ul>
+                </div>                        
+                <!-- input name="search" type="search" ng-min-length="3" ng-model="search1" / -->                 
+                <div svg-map  search="search1" template="templateList1"></div>
             </div>
-
-            <div class="deco">
+            <div class="deco" ng-show="confirmed1">
                 <div class="lightsaber">
                     <label for="saber1"></label>
                     <input type="checkbox" id="saber1" ng-checked="confirmed1">
@@ -20,25 +21,25 @@
                     <div class="plasma vader"></div>
                 </div>
             </div>
-
         </form>
-
-
-
     </div>
+
     <div id="play2">
         <form>
-            <div ng-show="confirmed2 == false">
-
-                <input name="search" type="search" ng-min-length="3" ng-model="search2" />
-                <button ng-click="confirm(2)" ng-show="checked2">Commencer</button>
-
-                <ul>
-                    <li ng-repeat="list in templateList| filter:search2 " ng-click="setValue2(list)">{{list.firstName}} {{list.lastName}}</li>
-                </ul>
-                <div svg-map search="search2"></div>
+            <div ng-show="!confirmed2">
+                <div class="name-box">
+                    <input type="hidden" ng-model="search2" >
+                    {{search2}}<button ng-click="confirm(2)" ng-show="checked2" class="go">Commencer</button>
+                    <input type="hidden" ng-model="templateList2">
+                    <ul>
+                        <li ng-repeat="list in templateList2" ng-click="setValue2(list)">{{list.firstName}} {{list.lastName}}</li>
+                    </ul>
+                </div>                        
+                <!-- input name="search" type="search" ng-min-length="3" ng-model="search1" / -->                 
+                <div svg-map  search="search2" template="templateList2"></div>
             </div>
-            <div class="deco">
+            
+            <div class="deco" ng-show="confirmed2">
                 <div class="lightsaber">
                     <label for="saber2"></label>
                     <input type="checkbox" id="saber2" ng-checked="confirmed2">
@@ -47,8 +48,6 @@
                 </div>
             </div>
         </form>
-
     </div>
-
 </div>
 
