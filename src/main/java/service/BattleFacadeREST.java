@@ -10,6 +10,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -121,19 +122,9 @@ public class BattleFacadeREST extends AbstractFacade<Battle> {
     @Path("highest/{number}")
     @Produces({"application/xml", "application/json"})
     public List<Player> highestCorrectAnswerers(@PathParam("number") int number) {
-        // Use MongoDB Native query with regexp json sequence
-        // This is required as text index ($text) is oddly not yet implementing partial word match
-        //javax.persistence.Query q = getEntityManager().createNativeQuery("db.Player.find( { \"$or\" : [ { \"mail\" : { \"$regex\": \".*"+filter+".*\", \"$options\": \"si\" } }, { \"firstName\" : { \"$regex\": \".*"+filter+".*\", \"$options\": \"si\" } }, { \"lastName\": { \"$regex\": \".*"+filter+".*\", \"$options\": \"si\" } } ] } )");
-        javax.persistence.Query q = getEntityManager().createNativeQuery("db.Player.find( { \"points\" : { \"$gt\": 0 } }, { \"_id\" : 1, \"mail\" : 1, \"firstName\" : 1, \"lastName\" : 1, \"points\" : 1 } ).sort( { \"points\": -1 } ).limit( "+number+" )");
-
-        final List items = q.getResultList();
-        final List<Player> players = new ArrayList<>();
-        
-        // Perform some lazy MongoDB returned data to Java beans mapping so that it can produces the expected format
-        for(Object obj : items){
-            players.add(createPlayer((Object[])obj));
-        }
-        return players;
+        TypedQuery<Player> q = getEntityManager().createQuery("select p from Player p where p.points > 0 order by p.points desc",Player.class);
+        q.setMaxResults(number);
+        return q.getResultList();
     }    
     
     @EJB PlayerFacadeREST playerService;
