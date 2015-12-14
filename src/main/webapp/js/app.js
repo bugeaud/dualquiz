@@ -5,34 +5,23 @@ quizzApp.config(function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/start');
 
     $stateProvider
-
-            // HOME STATES AND NESTED VIEWS ========================================
+            //ecran de login
             .state('start', {
                 url: '/start?category',
                 templateUrl: 'start.html'
             })
-
-            // nested list with custom controller
+            // ecran de jeu
             .state('play', {
                 url: '/play/:battleId',
                 templateUrl: 'player.html',
                 controller: 'battleController'
             })
-           
-
-         
+       
 
 });
 
-quizzApp.directive('testChange', function () {
-    return function (scope, element, attrs) {
-        element.bind('change', function () {
-            console.log('value changed');
-        })
-    }
-})
 
-
+//contient les éléments de la battle
 quizzApp.service('battleService', function() {
     this.category="";
     
@@ -58,19 +47,19 @@ quizzApp.service('battleService', function() {
    
 });
 
-
-
-
-
-quizzApp.controller('searchController', function ($scope, $timeout, $location, $http, battleService) {
-   
+//Gestion de l'écran de login
+//une fois que les deux joueurs ont selectionne leur noms et cliquer sur commencer, petite animation et c'est parti
+quizzApp.controller('startController', function ($scope, $timeout, $location, $http, battleService) {
+   //on initialise la category de la battle
    var params = $location.search();
    battleService.category=params.category;
    
     $scope.confirmed1=false;
     $scope.confirmed2=false;
 
+//sale !!! on init les players quand le joueur clique sur son nom
     $scope.players = {user1: "", user2: ""};
+    
     $scope.setValue1 = function (list) {
         $scope.search1 = list.firstName + " " + list.lastName;
         $scope.user1 = list;
@@ -84,6 +73,7 @@ quizzApp.controller('searchController', function ($scope, $timeout, $location, $
 
     };
     
+    //les joueurs confirment leur identite. on initialise les parametres de la battle
     $scope.confirm = function(user){
         if(user == 1){
             battleService.player1.player = $scope.user1;
@@ -109,53 +99,66 @@ quizzApp.controller('searchController', function ($scope, $timeout, $location, $
          $scope.goPlay();
     };
     
-    $scope.onTimeout = function(){
         
-    }
-
-    
     $scope.goPlay = function () {
-        
-
-        if (battleService.player1.player != null && battleService.player2.player  != null) {
-            $scope.moveSaber = true;
-            
-            var battleServiceUrl='/dualquiz/webresources/net.java.dualquizz.battle/new-battle';
+        //si on a bien 2 joueurs 
+        if (battleService.player1.player != null && battleService.player2.player != null) {
+            //on cree une nouvelle battle
+            var battleServiceUrl = '/dualquiz/webresources/net.java.dualquizz.battle/new-battle';
             $http.defaults.headers.common['Content-Type'] = 'application/json; charset=utf-8';
             $http.get(battleServiceUrl
-                        +"?cid=" +battleService.player1.id 
+                    + "?cid=" + battleService.player1.id
                     + "&cid=" + battleService.player2.id
                     + "&category=" + battleService.category).
                     success(function (data) {
                         battleService.battle = data;
+                        //petite attente pour l'animation sabre laser
                         $timeout(function () {
-                            $location.url('/play/'+data.id);
-                        }, 1500);                                                 
+                            $location.url('/play/' + data.id);
+                        }, 1500);
                     }).
                     error(function (data) {
-                        battleService.battle = data; 
-                         $timeout(function () {
-                            $location.url('/play/'+data.id);
-                        }, 1500);             
+                        //@todo si une bataille entre les 2 joueurs existent deja ça ne marche pas ??
+                        battleService.battle = data;
+                        $timeout(function () {
+                            $location.url('/play/' + data.id);
+                        }, 1500);
                     });
-           
         }
     }
 });
 
-
-quizzApp.controller('battleController', function ($scope, $http, $timeout, $stateParams, battleService) {
-
- 
+//gestion de la battle
+quizzApp.controller('battleController', function ($scope, $http, $timeout,battleService) { 
+     //params
+     
+    var nbQuestionMax = 3; //nombre de question par match
+    var delay = 10; //délai pour repondre
+    var delayAnswer = 3; //délai pour voir les reponses
+    $scope.wait = delayAnswer; // délai pour voir la bonne réponse
+    
+    $scope.myQuestion = 'question.html';
+    $scope.category = battleService.category;
+    $scope.showAnswer=false;
+    $scope.battleEnded=false;
+    $scope.player=[battleService.player1.player, battleService.player2.player];
+    $scope.counter = delay;
+    $scope.nbQuestion = 0;
+    var mytimeout = $timeout($scope.onTimeout,1000);
+    $scope.pullQuestion();
+    
+   
     $scope.onTimeout = function () {
+        //tant que ce n'est pas fini : fin ou abandon
         if(!$scope.battleEnded){
+            //pour chaque qestion on decompte
             if ($scope.counter > 0) {
                 mytimeout = $timeout($scope.onTimeout, 1000);
                 $scope.counter--;
             } else {
-                //show answers
+                //si le compteur est a zero et qu'on a du temps a attendre, place aux resultats
                 if ($scope.wait > 0) {
-                    if($scope.wait == 5){
+                    if($scope.wait == delayAnswer){
                         battleService.player1.player.points += battleService.player1.currentTime;
                         battleService.player1.currentScore += battleService.player1.currentTime;
                         if(battleService.player1.currentAnswer){
@@ -170,16 +173,17 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, $stat
                     console.log("player2 : score " + battleService.player2.currentScore + " - " + battleService.player2.player.points );
 
                     }
-                     $scope.showAnswer = true;
+                    $scope.showAnswer = true;
                     mytimeout = $timeout($scope.onTimeout, 1000);
                     $scope.wait--;
 
                 } else {
+                    //si on a fini de regarder les reponses et qu'on a encore des questions dans la manche
                     if ($scope.nbQuestion < nbQuestionMax ){
                         $scope.pullQuestion();
                         $scope.reset();
                     }else{
-                        //end
+                        //sinon fin
                         $scope.endBattle();
                     }
                 }
@@ -187,6 +191,7 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, $stat
         }
     };
     
+    //abandon d'un des joueurs, 1 badge et 50 points pour celui qui reste
     $scope.abandon = function(player){
         if(player == 0){
             battleService.player1.abandon = true;
@@ -209,6 +214,7 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, $stat
         $scope.endBattle();
     }
     
+    //fin de la battle : score + badges + enregistrement
     $scope.endBattle = function () {
         var score1 = battleService.player1.currentScore;
         var score2 = battleService.player2.currentScore;
@@ -227,26 +233,29 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, $stat
                 $scope.player[1].winner=true;
             }
         }
+       // @todo register scores
         $scope.battleEnded = true;
+       //a verifier
+        //battleService = null;
     }
     
     
     $scope.reset= function(){
         $scope.counter = delay;
-        $scope.wait = 5;
+        $scope.wait = delayAnswer;
         mytimeout = $timeout($scope.onTimeout,1000);
     };
 
-    $scope.myQuestion = 'question.html';
-  
     
+   //tirage d'une question au hasard dans la categorie  
     $scope.pullQuestion = function () {
         $scope.showAnswer=false;
         $http.defaults.headers.common['Content-Type'] = 'application/json; charset=utf-8';
-        $http.get('/dualquiz/webresources/net.java.dualquizz.question/random').
+        $http.get('/dualquiz/webresources/net.java.dualquizz.question/random?catagory='+battleService.category).
                 success(function (data) {
-                    console.log(data);
                     $scope.description = data.description;
+                    //@ TODO 
+                  //  $scope.proposals = data.proposals;
                     $scope.nbQuestion += 1;
                     battleService.player1.currentTime = 0;
                     battleService.player1.currentAnswer = false;
@@ -257,9 +266,17 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, $stat
                         {"id": 2, "label": "Orange"},
                         {"id": 3, "label": "Rouge", "correct": true},
                         {"id": 4, "label": "#FFFFFF00 (c'est un geek fan d'alpha)"}];
+                    //on melange l'ordre des reponses 
+                    //elles sont affichee de la meme facon pour les 2 joueurs, triche permise!
                    $scope.proposals.sort(function() { return 0.5 - Math.random() });
                 });
     };
+
+/*
+ * Se declenche quand le joueur clique sur la reponse
+ * si la reponse est bonne, 1 bonne reponse et le temps comptabilises
+ * sinon 0 0
+ */
 
     $scope.clickedOrTouched = function ($event, correct) {
               
@@ -278,23 +295,13 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, $stat
         }
         
     };
-   
-     
-    $scope.category = battleService.category;
-    $scope.showAnswer=false;
-    $scope.battleEnded=false;
-    $scope.player=[battleService.player1.player, battleService.player2.player];
-    var delay = 10;
-    $scope.counter = delay;
-    $scope.wait = 5;
-    $scope.nbQuestion = 0;
-    var nbQuestionMax = 2;
-    var mytimeout = $timeout($scope.onTimeout,1000);
-    $scope.pullQuestion();
+  
     
 });
 
-
+/*
+ * Une petite directive pour gerer le clavier svg
+ */
 angular.module('quizzApp').directive('svgMap', ['$compile', function ($compile) {
     return {
         restrict: 'A',
@@ -319,6 +326,10 @@ angular.module('quizzApp').directive('svgMap', ['$compile', function ($compile) 
    
 }]);
 
+/*
+ * et une directive pour gerer les touches et les actions : entrer une lettre, back, clear 
+ * et recherche dans la lister des joueurs si on a tape plus de 3 lettres
+ */
 angular.module('quizzApp').directive('key', ['$compile','$http', function ($compile, $http) {
     return {
         restrict: 'A',
