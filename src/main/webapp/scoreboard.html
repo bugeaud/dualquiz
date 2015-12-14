@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SVG</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=0;" />
+
+        <style>
+            @import url(https://fonts.googleapis.com/css?family=Play);
+            @import url(https://fonts.googleapis.com/css?family=Orbitron);
+            @import url(http://fonts.googleapis.com/css?family=Droid+Sans:400,700);
+
+
+            html, body{     
+                margin: 0;
+                background-color:black;
+                color: #FFE81F;
+                font-family: 'Play', sans-serif;
+
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+
+
+
+            #scoreboard {
+                position: absolute;
+                width: 97%;
+                z-index: 4;
+                counter-reset: score-counter;
+                -webkit-column-count: 2; /* Chrome, Safari, Opera */
+                -moz-column-count: 2; /* Firefox */
+                column-count: 2;
+                font-family: 'Orbitron', sans-serif;
+                font-size: 200%;
+                padding: 1em;
+                background-color: transparent;
+            }
+
+            #scoreboard player {
+                z-index: 4 ! important;
+                display : table-row;
+            }
+
+            players{
+                display: table;
+                width:100%;
+            }
+
+            firstName{   
+                display: table-cell;
+                font-family: 'Play', sans-serif;
+            }
+
+            lastName {  
+                display: table-cell;
+                font-size:50%;
+                font-family: 'Play', sans-serif;
+            }
+
+            dl.scoreboard  dd {
+                display : inline;
+                right: 0;
+            }
+
+            firstName:before {
+                display: inline-block;
+                min-width: 2em;
+                font-family: 'Orbitron', sans-serif;
+                content: counter(score-counter);
+                counter-increment: score-counter;
+
+            }
+
+
+
+
+            points {
+                display: table-cell;
+                font-size : 80%;
+                float : right;
+            }
+            points:after {            
+                position: relative;
+                left : -4em;
+                top: 1em;
+                content: "points";
+                font-size: 20%;
+            }
+
+            #scoreboard badges, #scoreboard id, #scoreboard mail {
+                display : none;
+            }
+
+            #logo-1{
+                z-index: 5;
+                position:fixed;
+                bottom: 1em;
+                left:1em;
+            }
+
+            #logo-2{
+                z-index: 5;
+                position:fixed;
+                bottom:1em;
+                right:1em;
+            }
+
+            #logo-starwars{
+                z-index: 5;
+                position:fixed;
+                bottom:1em;
+                left: 0;
+                right: 0;
+                margin: auto;
+            }
+            #mojo{
+                z-index: 5;
+                position:fixed;
+                bottom:0.5em;  
+                left:50%;
+                padding:15px;
+                -ms-transform: translateX(-50%) translateY(0);
+                -webkit-transform: translate(-50%,0);
+                transform: translate(-50%,0);
+            }
+
+            #c {
+                position: fixed;
+                z-index: 1;
+                width: 100%;
+                height : 100%;
+
+            }
+
+        </style>  
+
+    </head>
+    <body id="score">
+        <canvas id="c"></canvas>
+
+        <img id="logo-1" class="player-logo" src="http://vignette2.wikia.nocookie.net/fr.starwars/images/a/ad/Alliance_Rebelle.svg" width="150" height="150" />
+        <img id="logo-2" class="player-logo" src="http://upload.wikimedia.org/wikipedia/en/b/b2/Galactic_Empire_emblem.svg" width="150" height="150" />
+        <img id="logo-starwars" class="player-logo" src="img/Star_Wars_Logo.svg" width="300" height="150" />
+        <div id="mojo">May D.A.S. force be with thou !</div>
+        <div id="scoreboard">      
+        </div>
+
+        <script defer async type="text/ecmascript">
+        "use strict";
+                console.log("Step 0");
+                function startTimer(){
+                        console.log("Refresh");
+		
+                        var xhr = new XMLHttpRequest();
+                        xhr.addEventListener('load', function() {
+                            let board = document.getElementById("scoreboard");
+                            board.innerHTML = xhr.responseText;
+                        });
+                        xhr.open('GET', '/dualquiz/webresources/net.java.dualquizz.battle/highest/22', true);
+                        xhr.send();
+                
+                 setTimeout(startTimer,10000);
+                }
+	
+                console.log("Step A");
+                //document.body.addEventListener('load', startTimer, false);
+                //startTimer();
+                setTimeout(startTimer,10000);
+                console.log("Step B");
+
+
+
+        </script>
+        <script>
+            // See http://www.kevs3d.co.uk/dev/warpfield/index-original.html
+            D = document; d = D.body.style; d.margin = 0; d.overflow = "hidden"; c = window, d = c.innerWidth, e = c.innerHeight, g = D.body.children[0], i = d / 2, j = e / 2; g.width = d; g.height = e; k = g.getContext("2d"); k.globalAlpha = 0.3; l = Math, m = l.random, n = l.sin, o = l.floor, p = 10, q = [], r = 0, s = 0.1, V = 500, W = 190, Q = 0.3; function E(n, f){g.addEventListener(n, f, !1); }function t(a){var f = 0; if (a.detail) f = - a.detail / 3;  else f = a.wheelDelta / 120; if (f > 0 && s < 1 || f < 0 && s + f / 25 > 0.1)s += f / 25}E("DOMMouseScroll", t); E("mousewheel", t); function u(a){a.x = (m() * d - d * 0.5) * p; a.y = (m() * e - e * 0.5) * p; a.a = p; a.b = 0; a.c = 0}for (var v = 0, w; v < V; v++){w = {}; u(w); q.push(w)}setInterval('k.fillStyle="#000";k.fillRect(0,0,d,e);for(a=i-d/2+d/2,f=j-e/2+e/2,h=0;h<V;h++){b=q[h],x=b.x/b.a,y=b.y/b.a,z=1/b.a*5+1,A=n(Q*h+r)*64+W,B=n(Q*h+2+r)*64+W,C=n(Q*h+4+r)*64+W;if(b.b!=0){k.strokeStyle="rgb("+o(A)+","+o(B)+","+o(C)+")";k.lineWidth=z;k.beginPath();k.moveTo(x+a,y+f);k.lineTo(b.b+a,b.c+f);k.stroke()}b.b=x;b.c=y;b.a-=s;if(b.a<s||b.b>d||b.c>e)u(b)}r+=0.1;', 25);
+        </script>	
+    </body>
+</html>
