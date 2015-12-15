@@ -25,6 +25,12 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(com.fasterxml.jackson.jaxrs.base.JsonMappingExceptionMapper.class);
+        resources.add(com.fasterxml.jackson.jaxrs.base.JsonParseExceptionMapper.class);
+        resources.add(com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider.class);
+        resources.add(com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider.class);
+        resources.add(com.fasterxml.jackson.jaxrs.json.JsonMappingExceptionMapper.class);
+        resources.add(com.fasterxml.jackson.jaxrs.json.JsonParseExceptionMapper.class);
         resources.add(service.BattleFacadeREST.class);
         resources.add(service.PlayerFacadeREST.class);
         resources.add(service.QuestionFacadeREST.class);

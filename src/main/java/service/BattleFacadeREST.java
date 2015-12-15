@@ -133,7 +133,7 @@ public class BattleFacadeREST extends AbstractFacade<Battle> {
     @GET
     @Path("new-answer/{battleId}/{playerId}/{questionId}/{proposalId}")
     @Produces({"application/xml", "application/json"})
-    public Battle correctAnswer(@PathParam("id") String id,
+    public Battle correctAnswer(
                                 @PathParam("battleId") String battleId,
                                 @PathParam("playerId") String playerId,
                                 @PathParam("questionId") String questionId,
