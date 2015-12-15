@@ -21,6 +21,29 @@ body {
 
 }
 
+
+#play1 {
+    /* background-color : green; */
+    transform: rotate(90deg) translate(15%, 102%);
+	transform-origin: 100% 100%;
+	position:fixed;
+	top : 0;
+	left : 0;
+    width: 550px;
+    height : 550px;	
+}
+#play2 {
+  /*  background-color : red; */
+    transform: rotate(-90deg) translate(-115%, 0%);
+	transform-origin: 0% 0%;
+	position:fixed;
+	top : 0;
+	right : 0;
+	width: 550px;
+    height : 550px;	
+}
+
+
 .player-logo{
   position: fixed;
   bottom: 0;
@@ -108,40 +131,21 @@ body {
   text-align:center;
 }
 
-#play1 {
-    /* background-color : green; */
-    transform: rotate(90deg) translate(20%, 100%);
-	transform-origin: 100% 100%;
-	position:fixed;
-	top : 0;
-	left : 0;
-    width: 500px;
-    height : 500px;	
-}
-#play2 {
-    /*background-color : red;*/
-    transform: rotate(-90deg) translate(-110%, 0%);
-	transform-origin: 0% 0%;
-	position:fixed;
-	top : 0;
-	right : 0;
-	width: 500px;
-    height : 500px;	
-}
 
- .show-answer div.right-answer{
+
+ .show-answer li.right-answer{
   background: green;
  }
 
- .show-answer div:not(.right-answer){
+ .show-answer li:not(.right-answer){
   background: red;
  }
 
- .show-answer div.right-answer.active {
+ .show-answer li.right-answer.active {
   background: lime;
  }
  
-  .show-answer  div.active {
+  .show-answer  li.active {
   outline-style: solid;
   outline-width:1px;
   outline-color: yellow;
@@ -158,21 +162,22 @@ body {
   .selectable li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }
   
  .starscroll{
+  width: 100%;
   font-family: 'Droid+Sans', sans-serif;
-  transform: perspective(300px) rotateX(23deg);
+  transform: perspective(300px) rotateX(20deg);
   text-align: justify;
   overflow: hidden;
  }
  
  .starscroll header {
-  font-size: 300%;
+  font-size: 250%;
  }
  
  .starscroll > ol {
   width:100%;
  }
- .starscroll > li {
-  font-size: 100%;
+ .starscroll ol > li {
+  font-size: 150%;
   text-align: justify;
   width:100%;
   padding-left : 50px ! important; 
@@ -189,7 +194,7 @@ body {
 	left: 0;
 	right: 0;
 	top: 0;
-	bottom: 60%;
+	bottom: 20%;
 	background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.5) 0%, transparent 100%);
 	background-image: -moz-linear-gradient(top, rgba(0,0,0,1) 0%, transparent 100%);
 	background-image: -ms-linear-gradient(top, rgba(0,0,0,1) 0%, transparent 100%);
@@ -237,6 +242,7 @@ body {
 	padding:13px 32px;
 	text-decoration:none;
 	text-shadow:0px 1px 0px #ffee66;
+        top: 0;
 }
 
 .myButton:active {

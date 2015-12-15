@@ -316,16 +316,18 @@ angular.module('quizzApp').directive('svgMap', ['$compile', function ($compile) 
         templateUrl: 'keyboard-simple-abc.svg',
          scope: {
             search: "=",
-            template : "="
+            template : "=",
+            check : "="
         },
         link: function (scope, element, attrs) {
           
-            var keys = element[0].querySelectorAll('.key');
+            var keys = element[0].querySelectorAll('g');
             angular.forEach(keys, function (path, key) {
                 var keyElement = angular.element(path);
                 keyElement.attr("key", "");
                 keyElement.attr("search", "search");
-                keyElement.attr("template", "template   ");
+                keyElement.attr("template", "template");
+                keyElement.attr("check", "check");
                 $compile(keyElement)(scope);
             })
             
@@ -343,22 +345,27 @@ angular.module('quizzApp').directive('key', ['$compile','$http', function ($comp
         restrict: 'A',
         scope: {
             search: "=",
-            template : "="
+            template : "=",
+            check : "="
         },
         link: function (scope, element, attrs ) {
          
             scope.elementId = element.attr("id");
             scope.keyClick = function () {
-                // alert(scope.elementId);
-                if(angular.isUndefined(scope.search) || scope.elementId == "clear"){
-                    scope.search = "";
+                if(angular.isUndefined(scope.search) ){
+                    scope.search = "";                
                 }
-                else if(scope.elementId == "back"){
+                if ( scope.elementId == "clear"){
+                       scope.search = "";                
+                }else if(scope.elementId == "back"){
                     scope.search = scope.search.substring( 0, scope.search.length-1 );
                 }else {
                     scope.search += scope.elementId;
                 }
-                if (scope.search.length >= 3) {
+                if(scope.search.length == 0){
+                    scope.check = false;
+                    scope.template = [];
+                }else if (scope.search.length >= 3) {
                         $http.get('/dualquiz/webresources/net.java.dualquizz.player/find/' + scope.search).
                                 then(function (response) {
                                     scope.template = response.data;
