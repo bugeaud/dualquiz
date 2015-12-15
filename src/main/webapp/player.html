@@ -64,7 +64,7 @@
                   <img class="nobadge" ng-src="{{'img/'+category+'.png'}}" width="100"/>
                   
               </span>
-              <a ui-sref="start" class="myButton">Commencer un combat</a>
+              <a ui-sref="start?category={{category}}" class="myButton">Commencer un combat</a>
          </div>         
          
           <span class="player-name">{{player[1].firstName}} {{player[1].lastName}}</span>

@@ -80,6 +80,9 @@ quizzApp.controller('startController', function ($scope, $timeout, $location, $h
             if(angular.isUndefined($scope.user1.badges)){
                 battleService.player1.player.badges=[];
             }
+            if(angular.isUndefined($scope.user1.points)){
+                battleService.player1.player.points=0;
+            }
             battleService.player1.currentScore = 0;
             battleService.player1.currentGoodAnswer = 0;
             battleService.player1.winner = false;
@@ -89,6 +92,9 @@ quizzApp.controller('startController', function ($scope, $timeout, $location, $h
             battleService.player2.player = $scope.user2;
             if(angular.isUndefined($scope.user2.badges)){
                 battleService.player2.player.badges=[];
+            }
+             if(angular.isUndefined($scope.user2.points)){
+                battleService.player2.player.points=0;
             }
             $scope.confirmed2=true;
             battleService.player2.currentScore = 0;
@@ -130,22 +136,7 @@ quizzApp.controller('startController', function ($scope, $timeout, $location, $h
 
 //gestion de la battle
 quizzApp.controller('battleController', function ($scope, $http, $timeout,battleService) { 
-     //params
-     
-    var nbQuestionMax = 3; //nombre de question par match
-    var delay = 10; //délai pour repondre
-    var delayAnswer = 3; //délai pour voir les reponses
-    $scope.wait = delayAnswer; // délai pour voir la bonne réponse
-    
-    $scope.myQuestion = 'question.html';
-    $scope.category = battleService.category;
-    $scope.showAnswer=false;
-    $scope.battleEnded=false;
-    $scope.player=[battleService.player1.player, battleService.player2.player];
-    $scope.counter = delay;
-    $scope.nbQuestion = 0;
-    var mytimeout = $timeout($scope.onTimeout,1000);
-    $scope.pullQuestion();
+  
     
    
     $scope.onTimeout = function () {
@@ -296,6 +287,23 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout,battle
         
     };
   
+    
+       //params
+     
+    var nbQuestionMax = 3; //nombre de question par match
+    var delay = 10; //délai pour repondre
+    var delayAnswer = 3; //délai pour voir les reponses
+    $scope.wait = delayAnswer; // délai pour voir la bonne réponse
+    
+    $scope.myQuestion = 'question.html';
+    $scope.category = battleService.category;
+    $scope.showAnswer=false;
+    $scope.battleEnded=false;
+    $scope.player=[battleService.player1.player, battleService.player2.player];
+    $scope.counter = delay;
+    $scope.nbQuestion = 0;
+    var mytimeout = $timeout($scope.onTimeout,1000);
+    $scope.pullQuestion();
     
 });
 

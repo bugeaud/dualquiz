@@ -664,8 +664,10 @@ body {
     cursor: pointer; }
 .name-box ul li:last-child {
     border-bottom: none; }
-.name-box::-webkit-scrollbar { width: 0 !important }
 
+::-webkit-scrollbar { 
+    display: none; 
+}
 
 .btn {
   background: #667482;
