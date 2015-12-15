@@ -25,11 +25,9 @@
                 user-select: none;
             }
 
-
-
             #scoreboard {
                 position: absolute;
-                width: 97%;
+                width: 92%;
                 z-index: 4;
                 counter-reset: score-counter;
                 -webkit-column-count: 2; /* Chrome, Safari, Opera */
@@ -37,7 +35,7 @@
                 column-count: 2;
                 font-family: 'Orbitron', sans-serif;
                 font-size: 200%;
-                padding: 1em;
+                padding: 2em;
                 background-color: transparent;
             }
 
@@ -99,15 +97,15 @@
             #logo-1{
                 z-index: 5;
                 position:fixed;
-                bottom: 1em;
-                left:1em;
+                bottom: 2em;
+                left:2em;
             }
 
             #logo-2{
                 z-index: 5;
                 position:fixed;
-                bottom:1em;
-                right:1em;
+                bottom:2em;
+                right:2em;
             }
 
             #logo-starwars{
@@ -143,10 +141,10 @@
     <body id="score">
         <canvas id="c"></canvas>
 
-        <img id="logo-1" class="player-logo" src="http://vignette2.wikia.nocookie.net/fr.starwars/images/a/ad/Alliance_Rebelle.svg" width="150" height="150" />
-        <img id="logo-2" class="player-logo" src="http://upload.wikimedia.org/wikipedia/en/b/b2/Galactic_Empire_emblem.svg" width="150" height="150" />
+        <img id="logo-1" class="player-logo" src="img/Alliance_Rebelle.svg" width="150" height="150" />
+        <img id="logo-2" class="player-logo" src="img/Galactic_Empire_emblem.svg" width="150" height="150" />
         <img id="logo-starwars" class="player-logo" src="img/Star_Wars_Logo.svg" width="300" height="150" />
-        <div id="mojo">May D.A.S. force be with thou !</div>
+        <div id="mojo">May D.A.S. force be with thou</div>
         <div id="scoreboard">      
         </div>
 
@@ -164,7 +162,7 @@
                         xhr.open('GET', '/dualquiz/webresources/net.java.dualquizz.battle/highest/22', true);
                         xhr.send();
                 
-                 setTimeout(startTimer,10000);
+                 //setTimeout(startTimer,10000);
                 }
 	
                 console.log("Step A");
