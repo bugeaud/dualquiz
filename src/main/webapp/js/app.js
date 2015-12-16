@@ -1,4 +1,4 @@
-var quizzApp = angular.module('quizzApp', ['ui.router', 'ngAnimate']);
+var quizzApp = angular.module('quizzApp', ['ui.router', 'ngAnimate','ngTouch']);
 
 quizzApp.config(function ($stateProvider, $urlRouterProvider) {
 
@@ -160,12 +160,9 @@ quizzApp.controller('startController', function ($scope, $timeout, $location, $h
     
     battleService.battle.category = params.category;
     battleService.battleEnded = true;
-    $scope.confirmed1 = false;
-    $scope.confirmed2 = false;
     battleService.player1.player=null;
     battleService.player2.player=null;
-    $scope.players[0] = null;
-    $scope.players[1] = null;
+    $scope.players = []
 
 //sale !!! on init les players quand le joueur clique sur son nom
     $scope.players = {};
@@ -269,12 +266,12 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, battl
                         });
                     }else{
                         $scope.player[0].points = battleService.player1.player.points;
-                        $scope.player[0].badges = battleService.player1.player.badges;
+                            $scope.player[0].badges = battleService.player1.player.badges;
                         $scope.player[0].winner = battleService.player1.winner;
-                        $scope.player[1].points = battleService.player2.player.points;
-                        $scope.player[1].badges = battleService.player2.player.badges;
+                            $scope.player[1].points = battleService.player2.player.points;
+                            $scope.player[1].badges = battleService.player2.player.badges;
                         $scope.player[1].winner = battleService.player2.winner;
-                        $scope.showAnswer = true;
+                            $scope.showAnswer = true;
                         mytimeout = $timeout($scope.onTimeout, 10);
                         $scope.wait--;  
                     }
