@@ -57,20 +57,23 @@ public class QuestionFacadeREST extends AbstractFacade<Question> {
         question.setDescription(description);
         question.setCategory(category);
         
+        // Now create the new question;
+        getEntityManager().persist(question);
+        
         final List<Proposal> proposalItems = proposals.stream()
             //.filter(p -> playerService.find(p)!=null )
             .map( label -> { 
                 Proposal p = new Proposal();
                 p.setLabel(label);
                 p.setCorrect(correctProposals.contains(label));
+                //getEntityManager().persist(p);
                 return p;
             })
             .collect(Collectors.toList());  
         
+        // Merge the newrelations 
         question.setProposals(proposalItems);
-        
-        // Now create the new question;
-        super.create(question);
+        getEntityManager().merge(question);
         
         return question;
     }

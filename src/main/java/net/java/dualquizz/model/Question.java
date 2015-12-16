@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -52,8 +53,9 @@ public class Question implements Serializable {
     
     /*@XmlElementWrapper
     @XmlElement(name="proposal") //, type=Proposal.class) */
-    @OneToMany(fetch = FetchType.EAGER, mappedBy="question", cascade = CascadeType.ALL, orphanRemoval = true)
-    //@ElementCollection
+    //@OneToMany(fetch = FetchType.EAGER, mappedBy="question", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(name="proposal")
     private List<Proposal> proposals = new ArrayList<>();
     
     public String getId() {

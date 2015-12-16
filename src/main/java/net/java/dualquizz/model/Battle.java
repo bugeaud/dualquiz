@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MapKeyColumn;
@@ -30,7 +31,7 @@ public class Battle implements Serializable {
     
     @MapKeyColumn(name = "playerId")
     @Column(name= "boardScore")
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     //private Map<Player,Integer> board = new HashMap<>();
     private Map<String,Integer> boardMembers = new HashMap<>();
 

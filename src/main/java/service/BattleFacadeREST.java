@@ -169,7 +169,7 @@ public class BattleFacadeREST extends AbstractFacade<Battle> {
            p.setBadges(badges);
            p.setPoints((p.getPoints()==null ? 0 : p.getPoints() ) +10);
         }
-
+        
         return battle;
     }
   
