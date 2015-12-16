@@ -102,16 +102,20 @@ quizzApp.service('battleService', function ($http, $q) {
                     if (self.player1.currentTime < self.player2.currentTime) {
                         self.player1.currentGoodAnswer += 1;
                         questionWinner = self.player1.player.id;
+                        $scope.player[0].winner=true;
                     } else {
                         self.player2.currentGoodAnswer += 1;
                         questionWinner = self.player2.player.id;
+                        $scope.player[1].winner=true;
                     }
                 } else if (self.player1.currentAnswer) {
                     self.player1.currentGoodAnswer += 1;
                     questionWinner = self.player1.player.id;
+                    $scope.player[0].winner=true;
                 } else if (self.player2.currentAnswer) {
                     self.player2.currentGoodAnswer += 1;
                     questionWinner = self.player2.player.id;
+                    $scope.player[1].winner=true;
                 }
                 console.log("Player 1 : " +  self.player1.currentGoodAnswer  +
                             " - Player 2 : " +  self.player2.currentGoodAnswer  );
@@ -224,7 +228,7 @@ quizzApp.controller('startController', function ($scope, $timeout, $location, $h
 });
 
 //gestion de la battle
-quizzApp.controller('battleController', function ($scope, $http, $timeout, battleService) {
+quizzApp.controller('battleController', function ($scope, $http, $timeout, battleService, $state) {
 
     $scope.onTimeout = function () {
         //tant que ce n'est pas fini : fin ou abandon
@@ -239,17 +243,18 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, battl
                     if ($scope.wait == delayAnswer) {
                         //  on met a jour les scores
                         battleService.resolveBattle($scope.questionId, $scope.correctProposalId).then(function () {
-                            $scope.player[0].points = battleService.player1.player.points;
-                            $scope.player[0].badges = battleService.player1.player.badges;
-                            $scope.player[1].points = battleService.player2.player.points;
-                            $scope.player[1].badges = battleService.player2.player.badges;
-                            $scope.showAnswer = true;
+                            
                             mytimeout = $timeout($scope.onTimeout, 10);
                             $scope.wait--;
                         });
                     }else{
+                        $scope.player[0].points = battleService.player1.player.points;
+                            $scope.player[0].badges = battleService.player1.player.badges;
+                            $scope.player[1].points = battleService.player2.player.points;
+                            $scope.player[1].badges = battleService.player2.player.badges;
+                            $scope.showAnswer = true;
                         mytimeout = $timeout($scope.onTimeout, 10);
-                            $scope.wait--;  
+                        $scope.wait--;  
                     }
                     
                 } else {
@@ -353,6 +358,10 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, battl
     };
 
 
+    $scope.startClickHandler = function(){
+        $state.go('start',{category:$scope.category});
+    }
+
     //params
 
     var nbQuestionMax = 3; //nombre de question par match
@@ -417,6 +426,12 @@ angular.module('quizzApp').directive('key', ['$compile', '$http', function ($com
             link: function (scope, element, attrs) {
                 scope.elementId = element.attr("id");
                 scope.keyClick = function () {
+                 //simulate css blink
+                    $(".key").removeClass("last-selected");
+                   
+                    setTimeout(function (){
+                            element.addClass("last-selected");
+                    },50);
                     if (angular.isUndefined(scope.search)) {
                         scope.search = "";
                     }
