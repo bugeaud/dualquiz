@@ -48,7 +48,7 @@ public class BattleFacadeREST extends AbstractFacade<Battle> {
     @GET
     @Path("new-battle")
     @Produces({"application/json", "application/xml"})
-    public Battle newBattle(@QueryParam("cid") List<String> playerIds) {
+    public Battle newBattle(@QueryParam("cid") List<String> playerIds, @QueryParam("category") String category) {
         if(playerIds==null || playerIds.size()<2){
             // There can only be a battle with at lease two supposed playser
             return null;
@@ -68,7 +68,8 @@ public class BattleFacadeREST extends AbstractFacade<Battle> {
                                     .collect(Collectors.toMap(Function.identity(),
                                                               (p) -> 0));
                 
-        battle.setBoardMembers(map);        
+        battle.setBoardMembers(map);  
+        battle.setCategory(category);
         super.create(battle);
         return battle;
     }
