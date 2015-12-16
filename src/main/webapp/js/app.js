@@ -2,9 +2,14 @@ var quizzApp = angular.module('quizzApp', ['ui.router', 'ngAnimate']);
 
 quizzApp.config(function ($stateProvider, $urlRouterProvider) {
 
-    $urlRouterProvider.otherwise('/start');
+    $urlRouterProvider.otherwise('/cat');
 
     $stateProvider
+            //ecran de login
+            .state('cat', {
+                url: '/cat',
+                templateUrl: 'cat.html'
+            })
             //ecran de login
             .state('start', {
                 url: '/start?category',
@@ -142,9 +147,15 @@ quizzApp.service('battleService', function ($http, $q) {
 
 //Gestion de l'écran de login
 //une fois que les deux joueurs ont selectionne leur noms et cliquer sur commencer, petite animation et c'est parti
-quizzApp.controller('startController', function ($scope, $timeout, $location, $http, battleService, $q) {
+quizzApp.controller('startController', function ($scope, $timeout, $location, $http, battleService, $q, $state) {
+    
     //on initialise la category de la battle
     var params = $location.search();
+    
+    if(params.category == null || params.category==""){
+        $state.go('cat');
+    }
+    
     battleService.battle.category = params.category;
     battleService.battleEnded = true;
     $scope.confirmed1 = false;
@@ -379,6 +390,13 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, battl
     var mytimeout = $timeout($scope.onTimeout, 10);
     $scope.pullQuestion();
     $scope.battleEnded = battleService.battleEnded;
+    if($scope.category == null ||$scope.category == "" ){
+        $state.go('cat');
+    }
+    if($scope.player[0] == null ||$scope.player[1] == null ){
+        $state.go('start',{category:$scope.category});
+    }
+
 
 });
 
