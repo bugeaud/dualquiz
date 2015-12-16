@@ -1,7 +1,5 @@
 package service;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -23,7 +21,6 @@ import javax.ws.rs.QueryParam;
 import net.java.dualquizz.model.Battle;
 import net.java.dualquizz.model.Player;
 import net.java.dualquizz.model.Question;
-import static service.PlayerFacadeREST.createPlayer;
 
 
 /**

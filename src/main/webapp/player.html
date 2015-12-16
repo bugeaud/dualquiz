@@ -2,33 +2,36 @@
  Add CSS class show-answer to show the right answer on each side ! 
 <body class="show-answer">
 -->
-
+<p style="text-align:center;position:fixed;bottom:0; margin: 0 auto;
+   left: 0;
+   right: 0;">
+    <a ui-sref="start({category:{{category}}})" class="myButton">Commencer un combat</a></p>
 <div id = "play1">
-   
-	 <span class="score">{{player[0].points}}</span>
-	 <span class="timer">{{counter}}</span>
-	 
-         <div class="starscroll" ng-include="myQuestion" ng-hide="battleEnded"></div>
-          <div  class="result" ng-show="battleEnded">
-             <span ng-if="player[0].winner" class="animate-if">
-                 Vous avez gagné le combat.</br>
-                 Vous remportez le badge {{category}}<br/>
-                 <img ng-src="{{'img/'+category+'.png'}}" width="100"/>
-                 
+
+    <span class="score">{{player[0].points}}</span>
+    <span class="timer">{{counter / 100| number:0}}</span>
+
+    <div class="starscroll" ng-include="myQuestion" ng-hide="battleEnded"></div>
+    <div  class="result" ng-show="battleEnded">
+        <span ng-if="player[0].winner" class="animate-if">
+            Vous avez gagné le combat.</br>
+            Vous remportez le badge {{category}}<br/>
+            <img ng-src="{{'img/' + category + '.png'}}" width="100"/>
+
+        </span>
+        <span ng-if="!player[0].winner" class="animate-if">
+            <span ng-if="!player[0].abandon">
+                Vous avez perdu le combat.</br>
             </span>
-              <span ng-if="!player[0].winner" class="animate-if">
-                 <span ng-if="!player[0].abandon">
-                 Vous avez perdu le combat.</br>
-                 </span>
-                  <span ng-if="player[0].abandon">
-                 Vous avez fuit le combat.</br>
-                 </span>
-                 Défiez quelqu'un d'autre pour remporter le badge {{category}}<br/>
-                   <img class="nobadge" ng-src="{{'img/'+category+'.png'}}" width="100"/>
-              </span>
-              <a ui-sref="start({category:{{category}}})" class="myButton">Commencer un combat</a>
-         </div>  
-         
+            <span ng-if="player[0].abandon">
+                Vous avez fuit le combat.</br>
+            </span>
+            Défiez quelqu'un d'autre pour remporter le badge {{category}}<br/>
+            <img class="nobadge" ng-src="{{'img/' + category + '.png'}}" width="100"/>
+        </span>
+
+    </div>  
+
     <span class="player-name">{{player[0].firstName}} {{player[0].lastName}}</span>     
     <div class="badges">
         <img ng-class="{'player-badges':true, 'nobadge': player[0].badges.indexOf('creature') == -1}" src="img/creature.png"/>
@@ -40,35 +43,35 @@
 </div>	
 
 <div id="play2">
-  
-	 <span class="score">{{player[1].points}}</span>
-         <span class="timer">{{counter}}</timer></span>
-       
-         <div class="starscroll" ng-include="myQuestion" ng-hide="battleEnded"></div>
-          <div  class="result" ng-show="battleEnded">
-             <span ng-if="player[1].winner" class="animate-if">
-                 Vous avez gagné le combat.</br>
-                 Vous remportez le badge {{category}}<br/>
-                  <img ng-src="{{'img/'+category+'.png'}}" width="100"/>
-                 
+
+    <span class="score">{{player[1].points}}</span>
+    <span class="timer">{{counter / 100| number:0}}</span>
+
+    <div class="starscroll" ng-include="myQuestion" ng-hide="battleEnded"></div>
+    <div  class="result" ng-show="battleEnded">
+        <span ng-if="player[1].winner" class="animate-if">
+            Vous avez gagné le combat.</br>
+            Vous remportez le badge {{category}}<br/>
+            <img ng-src="{{'img/' + category + '.png'}}" width="100"/>
+
+        </span>
+        <span ng-if="!player[1].winner" class="animate-if">
+            <span ng-if="!player[1].abandon">
+                Vous avez perdu le combat.</br>
             </span>
-              <span ng-if="!player[1].winner" class="animate-if">
-                 <span ng-if="!player[1].abandon">
-                 Vous avez perdu le combat.</br>
-                 </span>
-                  <span ng-if="player[1].abandon">
-                 Vous avez fuit le combat.</br>
-                 </span>
-                 Défiez quelqu'un d'autre pour remporter le badge {{category}}<br/>
-                  <img class="nobadge" ng-src="{{'img/'+category+'.png'}}" width="100"/>
-                  
-              </span>
-              <a ui-sref="start({category:{{category}}})" class="myButton">Commencer un combat</a>
-         </div>         
-         
-          <span class="player-name">{{player[1].firstName}} {{player[1].lastName}}</span>
-           
-        <div class="badges">
+            <span ng-if="player[1].abandon">
+                Vous avez fuit le combat.</br>
+            </span>
+            Défiez quelqu'un d'autre pour remporter le badge {{category}}<br/>
+            <img class="nobadge" ng-src="{{'img/' + category + '.png'}}" width="100"/>
+
+        </span>
+
+    </div>         
+
+    <span class="player-name">{{player[1].firstName}} {{player[1].lastName}}</span>
+
+    <div class="badges">
         <img ng-class="{'player-badges':true, 'nobadge': player[1].badges.indexOf('creature') == -1}" src="img/creature.png"/>
         <img ng-class="{'player-badges':true, 'nobadge': player[1].badges.indexOf('univers') == -1}" src="img/univers.png"/>
         <img ng-class="{'player-badges':true, 'nobadge': player[1].badges.indexOf('saga') == -1}" src="img/saga.png"/>
