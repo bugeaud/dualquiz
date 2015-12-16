@@ -1,4 +1,5 @@
 <div ng-controller="startController" >
+  
     <div id="play1">
         <form>
             <div ng-show="!confirmed1">              
@@ -8,7 +9,7 @@
                     &nbsp;{{search1}}<button ng-click="confirm(1)" ng-show="checked1" class="go">Commencer</button>
                     <input type="hidden" ng-model="templateList1">
                     <ul>
-                        <li ng-repeat="list in templateList1| filter:search1" ng-click="setValue1(list)">{{list.firstName}} {{list.lastName}}</li>
+                        <li ng-repeat="list in templateList1| orderBy: ['lastName', 'firstName'] " ng-click="setValue1(list)">{{list.firstName}} {{list.lastName}}</li>
                     </ul>
                 </div>                        
                 <!-- input name="search" type="search" ng-min-length="3" ng-model="search1" / -->                 
@@ -34,7 +35,7 @@
                     &nbsp;{{search2}}<button ng-click="confirm(2)" ng-show="checked2" class="go">Commencer</button>
                     <input type="hidden" ng-model="templateList2">
                     <ul>
-                        <li ng-repeat="list in templateList2" ng-click="setValue2(list)">{{list.firstName}} {{list.lastName}}</li>
+                        <li ng-repeat="list in templateList2 | orderBy: ['lastName', 'firstName']" ng-click="setValue2(list)">{{list.firstName}} {{list.lastName}}</li>
                     </ul>
                 </div>                        
                 <!-- input name="search" type="search" ng-min-length="3" ng-model="search1" / -->                 
