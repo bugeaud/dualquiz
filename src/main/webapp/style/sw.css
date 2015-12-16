@@ -43,6 +43,14 @@ body {
         height : 620px;	
 }
 
+#logo-starwars{
+    z-index: 5;
+    position:fixed;
+    bottom:1em;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
 
 .player-logo{
   position: fixed;

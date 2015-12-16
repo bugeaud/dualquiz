@@ -1,4 +1,4 @@
-var quizzApp = angular.module('quizzApp', ['ui.router', 'ngAnimate']);
+var quizzApp = angular.module('quizzApp', ['ui.router', 'ngAnimate','ngTouch']);
 
 quizzApp.config(function ($stateProvider, $urlRouterProvider) {
 
