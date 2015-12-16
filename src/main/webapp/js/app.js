@@ -101,28 +101,26 @@ quizzApp.service('battleService', function ($http, $q) {
         var self = this;
         var previous = $q.when(null);
         previous.then(function () {
-            self.player1.winner=false;
-            self.player2.winner=false;
             if (self.player1.currentAnswer || self.player2.currentAnswer) {
                 var questionWinner = null;
                 if (self.player1.currentAnswer && self.player2.currentAnswer) {
                     if (self.player1.currentTime < self.player2.currentTime) {
                         self.player1.currentGoodAnswer += 1;
                         questionWinner = self.player1.player.id;
-                        self.player1.winner=true;
+                        $scope.player[0].winner=true;
                     } else {
                         self.player2.currentGoodAnswer += 1;
                         questionWinner = self.player2.player.id;
-                        self.player2.winner=true;
+                        $scope.player[1].winner=true;
                     }
                 } else if (self.player1.currentAnswer) {
                     self.player1.currentGoodAnswer += 1;
                     questionWinner = self.player1.player.id;
-                    self.player1.winner=true;
+                    $scope.player[0].winner=true;
                 } else if (self.player2.currentAnswer) {
                     self.player2.currentGoodAnswer += 1;
                     questionWinner = self.player2.player.id;
-                    self.player2.winner=true;
+                    $scope.player[1].winner=true;
                 }
                 console.log("Player 1 : " +  self.player1.currentGoodAnswer  +
                             " - Player 2 : " +  self.player2.currentGoodAnswer  );
@@ -134,7 +132,7 @@ quizzApp.service('battleService', function ($http, $q) {
                         + answerId
                         ).
                         success(function (data) {
-                           
+                            return self.updatePlayers();
                             console.log("battle resolved");
                         });
             }
@@ -162,10 +160,6 @@ quizzApp.controller('startController', function ($scope, $timeout, $location, $h
     battleService.battleEnded = true;
     $scope.confirmed1 = false;
     $scope.confirmed2 = false;
-    battleService.player1.player=null;
-    battleService.player2.player=null;
-    $scope.players[0] = null;
-    $scope.players[1] = null;
 
 //sale !!! on init les players quand le joueur clique sur son nom
     $scope.players = {};
@@ -261,20 +255,15 @@ quizzApp.controller('battleController', function ($scope, $http, $timeout, battl
                         //  on met a jour les scores
                         battleService.resolveBattle($scope.questionId, $scope.correctProposalId).then(function () {
                             
-                            battleService.updatePlayers();
-                            console.log("battle over");
-                            $scope.wait--;
                             mytimeout = $timeout($scope.onTimeout, 10);
-                            
+                            $scope.wait--;
                         });
                     }else{
                         $scope.player[0].points = battleService.player1.player.points;
-                        $scope.player[0].badges = battleService.player1.player.badges;
-                        $scope.player[0].winner = battleService.player1.winner;
-                        $scope.player[1].points = battleService.player2.player.points;
-                        $scope.player[1].badges = battleService.player2.player.badges;
-                        $scope.player[1].winner = battleService.player2.winner;
-                        $scope.showAnswer = true;
+                            $scope.player[0].badges = battleService.player1.player.badges;
+                            $scope.player[1].points = battleService.player2.player.points;
+                            $scope.player[1].badges = battleService.player2.player.badges;
+                            $scope.showAnswer = true;
                         mytimeout = $timeout($scope.onTimeout, 10);
                         $scope.wait--;  
                     }
